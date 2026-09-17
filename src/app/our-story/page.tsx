@@ -1,10 +1,10 @@
-import Image from "next/image";
-import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import Header from "@/components/Header";
+import Image from "next/image";
 
 export default function OurStoryPage() {
   return (
-    <div className="min-h-screen bg-void flex flex-col">
+    <div className="min-h-screen bg-void flex flex-col overflow-y-auto">
       <Header />
 
       <main className="flex-1 pt-24 pb-20">
@@ -15,7 +15,7 @@ export default function OurStoryPage() {
               Our Story
             </h1>
             <p className="text-xl md:text-2xl text-steel mt-6 font-light italic">
-              The origin of LinkLoad, and the thesis behind it.
+              How LinkLoad came to be
             </p>
           </header>
 
