@@ -1,8 +1,8 @@
 const valueProps = [
   {
-    title: "No Manual Transfer Required",
+    title: "No manual transfer",
     description:
-      "LinkLoad automatically moves clothes from the washer to the dryer through its transfer architecture, eliminating the manual handoff between cycles.",
+      "LinkLoad moves clothes through the drums using a bespoke transfer mechanism, eliminating the need for manual intervention altogether.",
     icon: (
       <svg
         className="w-8 h-8"
@@ -20,9 +20,9 @@ const valueProps = [
     ),
   },
   {
-    title: "No Performance Compromise",
+    title: "No compromise",
     description:
-      "Two full-capacity, independently optimized units in a compact stacked footprint. Faster cycles, better drying, none of the compromises of 2-in-1s.",
+      "Two full-capacity, independently optimized units in a stacked footprint. All of the UX benefits of 2-in-1s without its inherent compromises.",
     icon: (
       <svg
         className="w-8 h-8"
@@ -40,9 +40,9 @@ const valueProps = [
     ),
   },
   {
-    title: "Two Loads, One Touch",
+    title: "Two loads, one touch",
     description:
-      "Place the first load in the washer and a second in the Queue Drawer above. Both follow through the system automatically.",
+      "Place the first load in the washer and a second in the Queue above. Both get washed and dried, and move completely on their own.",
     icon: (
       <svg
         className="w-8 h-8"
@@ -63,16 +63,16 @@ const valueProps = [
 
 export default function ValueProps() {
   return (
-    <section id="why-linkload" className="snap-section py-12 bg-void">
-      <div className="max-w-7xl mx-auto px-6 flex flex-col justify-center h-full">
-        <div className="text-center mb-8">
+    <section id="why-linkload" className="section bg-void">
+      <div className="max-w-7xl mx-auto w-full flex flex-col justify-center">
+        <div className="text-center mb-4 md:mb-6">
           <h2 className="text-fluid-section font-semibold text-paper tracking-tight">
-            Why LinkLoad
+            What's unique about LinkLoad
           </h2>
           <p className="text-fluid-subhead text-steel mt-3 max-w-2xl mx-auto">
-            The performance of separate premium machines,
+            It's the first system that address both elephants in the room:
             <br className="hidden sm:block" />
-            with the convenience of fully automated laundry.
+            manual transfer is a hassle, and 2-in-1s are a compromise.
           </p>
         </div>
 
@@ -86,7 +86,9 @@ export default function ValueProps() {
               <h3 className="text-xl lg:text-2xl font-medium text-paper mb-3">
                 {prop.title}
               </h3>
-              <p className="text-silver leading-relaxed text-base lg:text-lg">{prop.description}</p>
+              <p className="text-silver leading-relaxed text-base lg:text-lg">
+                {prop.description}
+              </p>
             </div>
           ))}
         </div>

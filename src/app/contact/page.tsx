@@ -1,8 +1,8 @@
 "use client";
 
-import { useState } from "react";
-import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import Header from "@/components/Header";
+import { useState } from "react";
 
 export default function ContactPage() {
   const [formData, setFormData] = useState({
@@ -22,7 +22,7 @@ export default function ContactPage() {
 
     // Create mailto link with form data
     const mailtoLink = `mailto:jarett@linkload.co?subject=${encodeURIComponent(formData.subject || "Contact Form Submission")}&body=${encodeURIComponent(
-      `Name: ${formData.name}\nEmail: ${formData.email}\nCompany: ${formData.company || "N/A"}\n\nMessage:\n${formData.message}`
+      `Name: ${formData.name}\nEmail: ${formData.email}\nCompany: ${formData.company || "N/A"}\n\nMessage:\n${formData.message}`,
     )}`;
 
     window.location.href = mailtoLink;
@@ -34,7 +34,9 @@ export default function ContactPage() {
   };
 
   const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
+    e: React.ChangeEvent<
+      HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
+    >,
   ) => {
     const { name, value } = e.target;
     setFormData((prev) => ({
@@ -89,9 +91,9 @@ export default function ContactPage() {
                   Contact Us
                 </h1>
                 <p className="text-silver mt-4 leading-relaxed">
-                  Have a professional inquiry, partnership opportunity, or general question?
-                  We&apos;d love to hear from you. Fill out the form below and we&apos;ll
-                  get back to you as soon as possible.
+                  Have a professional inquiry, partnership opportunity, or
+                  general question? Fill out the form below and we&apos;ll get
+                  back to you in 24 hours.
                 </p>
               </div>
 
@@ -99,7 +101,10 @@ export default function ContactPage() {
                 {/* Name & Email */}
                 <div className="grid sm:grid-cols-2 gap-4">
                   <div>
-                    <label htmlFor="name" className="block text-sm text-steel mb-2">
+                    <label
+                      htmlFor="name"
+                      className="block text-sm text-steel mb-2"
+                    >
                       Name <span className="text-signal">*</span>
                     </label>
                     <input
@@ -114,7 +119,10 @@ export default function ContactPage() {
                     />
                   </div>
                   <div>
-                    <label htmlFor="email" className="block text-sm text-steel mb-2">
+                    <label
+                      htmlFor="email"
+                      className="block text-sm text-steel mb-2"
+                    >
                       Email <span className="text-signal">*</span>
                     </label>
                     <input
@@ -132,7 +140,10 @@ export default function ContactPage() {
 
                 {/* Company */}
                 <div>
-                  <label htmlFor="company" className="block text-sm text-steel mb-2">
+                  <label
+                    htmlFor="company"
+                    className="block text-sm text-steel mb-2"
+                  >
                     Company <span className="text-steel/50">(optional)</span>
                   </label>
                   <input
@@ -148,7 +159,10 @@ export default function ContactPage() {
 
                 {/* Subject */}
                 <div>
-                  <label htmlFor="subject" className="block text-sm text-steel mb-2">
+                  <label
+                    htmlFor="subject"
+                    className="block text-sm text-steel mb-2"
+                  >
                     Subject <span className="text-signal">*</span>
                   </label>
                   <select
@@ -165,18 +179,33 @@ export default function ContactPage() {
                       backgroundSize: "20px",
                     }}
                   >
-                    <option value="" className="bg-graphite">Select a topic</option>
-                    <option value="Partnership Inquiry" className="bg-graphite">Partnership Inquiry</option>
-                    <option value="Press & Media" className="bg-graphite">Press & Media</option>
-                    <option value="Investment" className="bg-graphite">Investment</option>
-                    <option value="General Question" className="bg-graphite">General Question</option>
-                    <option value="Other" className="bg-graphite">Other</option>
+                    <option value="" className="bg-graphite">
+                      Select a topic
+                    </option>
+                    <option value="Partnership Inquiry" className="bg-graphite">
+                      Partnership Inquiry
+                    </option>
+                    <option value="Press & Media" className="bg-graphite">
+                      Press & Media
+                    </option>
+                    <option value="Investment" className="bg-graphite">
+                      Investment
+                    </option>
+                    <option value="General Question" className="bg-graphite">
+                      General Question
+                    </option>
+                    <option value="Other" className="bg-graphite">
+                      Other
+                    </option>
                   </select>
                 </div>
 
                 {/* Message */}
                 <div>
-                  <label htmlFor="message" className="block text-sm text-steel mb-2">
+                  <label
+                    htmlFor="message"
+                    className="block text-sm text-steel mb-2"
+                  >
                     Message <span className="text-signal">*</span>
                   </label>
                   <textarea
@@ -199,7 +228,11 @@ export default function ContactPage() {
                 >
                   {isSubmitting ? (
                     <>
-                      <svg className="animate-spin w-5 h-5" fill="none" viewBox="0 0 24 24">
+                      <svg
+                        className="animate-spin w-5 h-5"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                      >
                         <circle
                           className="opacity-25"
                           cx="12"
@@ -222,8 +255,11 @@ export default function ContactPage() {
                 </button>
 
                 <p className="text-center text-xs text-steel">
-                  Or email us directly at{" "}
-                  <a href="mailto:jarett@linkload.co" className="text-signal hover:underline">
+                  Or send a direct email to{" "}
+                  <a
+                    href="mailto:jarett@linkload.co"
+                    className="text-signal hover:underline"
+                  >
                     jarett@linkload.co
                   </a>
                 </p>

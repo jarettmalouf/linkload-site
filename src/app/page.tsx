@@ -9,15 +9,17 @@ import Footer from "@/components/Footer";
 
 export default function Home() {
   return (
-    <div className="snap-container">
+    <div className="home-container">
       <Header />
       <Hero />
-      <ValueProps />
-      <ComparisonTable />
-      <FilmSection />
-      <FAQ />
-      <WaitlistForm />
-      <Footer />
+      <div className="content-sections">
+        <FilmSection />
+        <ValueProps />
+        <ComparisonTable />
+        <FAQ />
+        <WaitlistForm />
+        <Footer />
+      </div>
     </div>
   );
 }

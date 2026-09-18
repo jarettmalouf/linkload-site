@@ -70,9 +70,9 @@ function XIcon() {
 
 export default function ComparisonTable() {
   return (
-    <section className="snap-section py-12 bg-graphite">
-      <div className="max-w-6xl mx-auto px-6 flex flex-col justify-center h-full">
-        <div className="text-center mb-8">
+    <section className="section bg-graphite">
+      <div className="max-w-6xl mx-auto w-full flex flex-col justify-center">
+        <div className="text-center mb-4 md:mb-6">
           <h2 className="text-fluid-section font-semibold text-paper tracking-tight">
             How LinkLoad Stacks Up
           </h2>

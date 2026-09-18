@@ -19,16 +19,10 @@ export default function Header() {
         </Link>
         <nav className="hidden md:flex items-center gap-8">
           <a
-            href="#why-linkload"
+            href="/"
             className="text-steel hover:text-paper transition-colors text-sm uppercase tracking-wider"
           >
-            Why LinkLoad
-          </a>
-          <a
-            href="#how-it-works"
-            className="text-steel hover:text-paper transition-colors text-sm uppercase tracking-wider"
-          >
-            How It Works
+            Home
           </a>
           <a
             href="/our-story"
@@ -44,7 +38,7 @@ export default function Header() {
           </a>
         </nav>
         <a
-          href="#waitlist"
+          href="/#waitlist"
           className="bg-signal hover:bg-signal/90 text-void font-medium px-5 py-2.5 rounded-lg transition-colors text-sm"
         >
           Apply to Pre-Order

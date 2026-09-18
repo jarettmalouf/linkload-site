@@ -6,27 +6,27 @@ const faqs = [
   {
     question: "How does automated transfer work?",
     answer:
-      "LinkLoad uses a retractable drum architecture and vertical chute to move clothes directly from the washer into the dryer without manual handling. The washer drum segments retract, allowing clothes to drop through a full-diameter transfer chute into the dryer below.",
+      "LinkLoad leverages a split-drum architecture and vertical chute to move clothes through the drums without manual intervention. Independent drum segments decouple and retract in sync, creating a full-diameter chute for clothes to pass through.",
   },
   {
     question: "How many loads can I start at once?",
     answer:
-      "Two. Put the first load in the washer and the second in the Queue Drawer above. The second follows the first through the cycles, while the first ultimately finishes in the Done Drawer below the dryer.",
+      "Two! Put the first load in the washer and the second in the Queue above. The second follows the first through the cycles, while the first ultimately finishes in the Done Drawer below the dryer.",
   },
   {
     question: "What if I have clothes to hang-dry?",
     answer:
-      "The washer and dryer can operate independently when automatic transfer isn't desired. A dedicated hang-dry mesh system allows selected garments to be separated from the automated transfer and drying workflow.",
+      "We got you covered. A dedicated hang-dry net allows users to separate clothes that are not meant for machine-dry. These clothes do not transfer to the dryer and can be removed at the user's leisure. Further, the washer and dryer can operate independently when transfer isn't desired.",
   },
   {
     question: "How is this different from 2-in-1s?",
     answer:
-      "LinkLoad uses two full-capacity, independently optimized units in a compact stacked footprint, delivering faster cycles, better drying, and none of the compromises of 2-in-1s. It retains the parallelization and specialized functions of traditional independent washers and dryers.",
+      "LinkLoad uses two independently optimized units in a stacked footprint. It retains the specialized functionality of traditional independent washers and dryers, and avoids the pitfalls of 2-in-1s: forced serialization, forced drying, longer wait times, lower heat caps, and lower drum capacity.",
   },
   {
     question: "How do you make sure clothes don't get stuck?",
     answer:
-      "Three engineering features ensure reliable transfer: a full-diameter transfer chute that matches the drum opening, dislodgement and load-balancing mechanisms that ensure all items release from the drum, and ingress guards that prevent items from catching on edges during the drop.",
+      "Three engineering features ensure reliable transfer: (1) a full-diameter transfer chute with bounded fabric guardrails, (2) dislodgement, load-balancing, and load-sensing mechanisms that ensure all items transfer successfully, and (3) ingress guards that peel items gently adhered to the walls.",
   },
 ];
 
@@ -54,11 +54,11 @@ export default function FAQ() {
   const [openIndex, setOpenIndex] = useState<number | null>(null);
 
   return (
-    <section id="faq" className="snap-section py-12 bg-graphite">
-      <div className="max-w-3xl mx-auto px-6">
-        <div className="text-center mb-12 md:mb-16">
+    <section id="faq" className="section bg-void">
+      <div className="max-w-3xl mx-auto w-full">
+        <div className="text-center mb-6 md:mb-8">
           <h2 className="text-fluid-section font-semibold text-paper tracking-tight">
-            Questions & Answers
+            Let's talk socks
           </h2>
         </div>
 

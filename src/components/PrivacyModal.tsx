@@ -50,7 +50,7 @@ export default function PrivacyModal({ isOpen, onClose }: PrivacyModalProps) {
 
         {/* Content */}
         <div className="px-6 py-6 space-y-6 text-silver text-sm leading-relaxed">
-          <p className="text-steel text-xs">Last updated: January 2026</p>
+          <p className="text-steel text-xs">Last updated: September 2026</p>
 
           <section>
             <h3 className="text-paper font-medium mb-2">Information We Collect</h3>

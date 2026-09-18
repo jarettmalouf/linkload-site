@@ -48,15 +48,34 @@ export default function WaitlistForm() {
 
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
+  const [error, setError] = useState<string | null>(null);
   const [privacyOpen, setPrivacyOpen] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
-    // Simulate submission - will be wired up later
-    await new Promise((resolve) => setTimeout(resolve, 1000));
-    setIsSubmitting(false);
-    setIsSubmitted(true);
+    setError(null);
+
+    try {
+      const response = await fetch("/api/waitlist", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
+      });
+
+      if (!response.ok) {
+        const data = await response.json();
+        throw new Error(data.error || "Failed to submit application");
+      }
+
+      setIsSubmitted(true);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Something went wrong. Please try again.");
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const handleChange = (
@@ -72,8 +91,8 @@ export default function WaitlistForm() {
 
   if (isSubmitted) {
     return (
-      <section id="waitlist" className="snap-section py-12 bg-void">
-        <div className="max-w-xl mx-auto px-6 text-center">
+      <section id="waitlist" className="section bg-graphite">
+        <div className="max-w-xl mx-auto w-full text-center">
           <div className="w-16 h-16 mx-auto mb-6 rounded-full bg-signal/20 flex items-center justify-center">
             <svg
               className="w-8 h-8 text-signal"
@@ -101,9 +120,9 @@ export default function WaitlistForm() {
   }
 
   return (
-    <section id="waitlist" className="snap-section py-12 bg-void">
-      <div className="max-w-xl mx-auto px-6">
-        <div className="text-center mb-12">
+    <section id="waitlist" className="section bg-graphite">
+      <div className="max-w-xl mx-auto w-full">
+        <div className="text-center mb-8 md:mb-12">
           <h2 className="text-fluid-section font-semibold text-paper tracking-tight">
             Apply to Pre-Order
           </h2>
@@ -112,7 +131,7 @@ export default function WaitlistForm() {
           </p>
         </div>
 
-        <form onSubmit={handleSubmit} className="space-y-6">
+        <form onSubmit={handleSubmit} className="space-y-4">
           {/* Name & Email */}
           <div className="grid sm:grid-cols-2 gap-4">
             <div>
@@ -150,6 +169,71 @@ export default function WaitlistForm() {
                 className="w-full px-4 py-3 rounded-lg bg-graphite border border-charcoal text-paper placeholder:text-steel/50 focus:border-signal focus:outline-none focus:ring-1 focus:ring-signal transition-colors"
                 placeholder="you@example.com"
               />
+            </div>
+          </div>
+
+          {/* Age Range & Gender */}
+          <div className="grid sm:grid-cols-2 gap-4">
+            <div>
+              <label
+                htmlFor="ageRange"
+                className="block text-sm text-steel mb-2"
+              >
+                Age range <span className="text-signal">*</span>
+              </label>
+              <select
+                id="ageRange"
+                name="ageRange"
+                required
+                value={formData.ageRange}
+                onChange={handleChange}
+                className="w-full px-4 py-3 rounded-lg bg-graphite border border-charcoal text-paper focus:border-signal focus:outline-none focus:ring-1 focus:ring-signal transition-colors appearance-none cursor-pointer"
+                style={{
+                  backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%238E929A'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E")`,
+                  backgroundRepeat: "no-repeat",
+                  backgroundPosition: "right 12px center",
+                  backgroundSize: "20px",
+                }}
+              >
+                <option value="" className="bg-graphite">
+                  Select one
+                </option>
+                {ageRanges.map((age) => (
+                  <option key={age.value} value={age.value} className="bg-graphite">
+                    {age.label}
+                  </option>
+                ))}
+              </select>
+            </div>
+            <div>
+              <label
+                htmlFor="gender"
+                className="block text-sm text-steel mb-2"
+              >
+                Gender <span className="text-steel/50">(optional)</span>
+              </label>
+              <select
+                id="gender"
+                name="gender"
+                value={formData.gender}
+                onChange={handleChange}
+                className="w-full px-4 py-3 rounded-lg bg-graphite border border-charcoal text-paper focus:border-signal focus:outline-none focus:ring-1 focus:ring-signal transition-colors appearance-none cursor-pointer"
+                style={{
+                  backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%238E929A'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E")`,
+                  backgroundRepeat: "no-repeat",
+                  backgroundPosition: "right 12px center",
+                  backgroundSize: "20px",
+                }}
+              >
+                <option value="" className="bg-graphite">
+                  Select one
+                </option>
+                {genders.map((g) => (
+                  <option key={g.value} value={g.value} className="bg-graphite">
+                    {g.label}
+                  </option>
+                ))}
+              </select>
             </div>
           </div>
 
@@ -233,70 +317,12 @@ export default function WaitlistForm() {
             </select>
           </div>
 
-          {/* Age Range & Gender */}
-          <div className="grid sm:grid-cols-2 gap-4">
-            <div>
-              <label
-                htmlFor="ageRange"
-                className="block text-sm text-steel mb-2"
-              >
-                Age range <span className="text-signal">*</span>
-              </label>
-              <select
-                id="ageRange"
-                name="ageRange"
-                required
-                value={formData.ageRange}
-                onChange={handleChange}
-                className="w-full px-4 py-3 rounded-lg bg-graphite border border-charcoal text-paper focus:border-signal focus:outline-none focus:ring-1 focus:ring-signal transition-colors appearance-none cursor-pointer"
-                style={{
-                  backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%238E929A'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E")`,
-                  backgroundRepeat: "no-repeat",
-                  backgroundPosition: "right 12px center",
-                  backgroundSize: "20px",
-                }}
-              >
-                <option value="" className="bg-graphite">
-                  Select one
-                </option>
-                {ageRanges.map((age) => (
-                  <option key={age.value} value={age.value} className="bg-graphite">
-                    {age.label}
-                  </option>
-                ))}
-              </select>
+          {/* Error display */}
+          {error && (
+            <div className="p-4 rounded-lg bg-red-500/10 border border-red-500/30 text-red-400 text-sm">
+              {error}
             </div>
-            <div>
-              <label
-                htmlFor="gender"
-                className="block text-sm text-steel mb-2"
-              >
-                Gender <span className="text-steel/50">(optional)</span>
-              </label>
-              <select
-                id="gender"
-                name="gender"
-                value={formData.gender}
-                onChange={handleChange}
-                className="w-full px-4 py-3 rounded-lg bg-graphite border border-charcoal text-paper focus:border-signal focus:outline-none focus:ring-1 focus:ring-signal transition-colors appearance-none cursor-pointer"
-                style={{
-                  backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%238E929A'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E")`,
-                  backgroundRepeat: "no-repeat",
-                  backgroundPosition: "right 12px center",
-                  backgroundSize: "20px",
-                }}
-              >
-                <option value="" className="bg-graphite">
-                  Select one
-                </option>
-                {genders.map((g) => (
-                  <option key={g.value} value={g.value} className="bg-graphite">
-                    {g.label}
-                  </option>
-                ))}
-              </select>
-            </div>
-          </div>
+          )}
 
           {/* Privacy notice */}
           <p className="text-xs text-steel">

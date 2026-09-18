@@ -1,11 +1,7 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import { GeistSans } from "geist/font/sans";
+import { GeistMono } from "geist/font/mono";
 import "./globals.css";
-
-const inter = Inter({
-  variable: "--font-inter",
-  subsets: ["latin"],
-});
 
 export const metadata: Metadata = {
   title: "LinkLoad – The Washer-Dryer That Transfers Clothes for You",
@@ -21,6 +17,9 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
+    title: "LinkLoad – The Washer-Dryer That Transfers Clothes for You",
+    description:
+      "A one-touch washer-dryer system with automatic transfer, queue-ready loading, and full appliance-grade performance.",
   },
 };
 
@@ -32,7 +31,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${inter.variable} antialiased`}
+      className={`${GeistSans.variable} ${GeistMono.variable} antialiased`}
     >
       <body className="min-h-screen bg-void text-silver">{children}</body>
     </html>

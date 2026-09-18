@@ -34,7 +34,18 @@
 html, body {
   height: 100%;
   margin: 0;
-  overflow: hidden;
+}
+
+/* Hide scrollbar but allow scrolling */
+html, body {
+  overflow-x: hidden;
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE/Edge */
+}
+
+html::-webkit-scrollbar,
+body::-webkit-scrollbar {
+  display: none; /* Chrome, Safari, Opera */
 }
 
 body {
@@ -43,19 +54,19 @@ body {
   font-family: var(--font-sans), Arial, Helvetica, sans-serif;
 }
 
-/* Fluid typography */
+/* Fluid typography - responsive to both width and height */
 .text-fluid-hero {
-  font-size: clamp(2.5rem, 6vw, 6rem);
+  font-size: clamp(2rem, min(6vw, 8vh), 5rem);
   line-height: 1.05;
 }
 
 .text-fluid-subhead {
-  font-size: clamp(1.125rem, 2vw, 1.5rem);
+  font-size: clamp(1rem, min(2vw, 2.5vh), 1.5rem);
   line-height: 1.5;
 }
 
 .text-fluid-section {
-  font-size: clamp(2rem, 4vw, 3.5rem);
+  font-size: clamp(1.75rem, min(4vw, 5vh), 3rem);
   line-height: 1.15;
 }
 
@@ -69,27 +80,36 @@ body {
   text-wrap: balance;
 }
 
-/* Scroll snap container */
-.snap-container {
-  height: 100vh;
-  overflow-y: scroll;
-  scroll-snap-type: y mandatory;
+/* Home page container - snap only for Hero */
+.home-container {
+  scroll-snap-type: y proximity;
   scroll-behavior: smooth;
-
-  /* Hide scrollbar across browsers */
-  scrollbar-width: none; /* Firefox */
-  -ms-overflow-style: none; /* IE/Edge */
 }
 
-.snap-container::-webkit-scrollbar {
-  display: none; /* Chrome, Safari, Opera */
-}
-
-/* Each section snaps and fills viewport */
-.snap-section {
+/* Hero section - snaps to fill viewport */
+.hero-section {
   min-height: 100vh;
   scroll-snap-align: start;
-  scroll-snap-stop: always;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  box-sizing: border-box;
+}
+
+/* Content sections - normal scrolling */
+.content-sections {
+  scroll-snap-align: start;
+}
+
+/* Regular sections without snap */
+.section {
+  padding: clamp(3rem, 8vh, 6rem) clamp(1rem, 4vw, 2rem);
+  box-sizing: border-box;
+}
+
+/* Legacy snap-section for backwards compatibility */
+.snap-section {
+  min-height: 100vh;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -114,5 +134,66 @@ body {
 
   .text-fluid-subhead {
     font-size: clamp(0.95rem, 1.8vw, 1.25rem);
+  }
+}
+
+/* Sketch positioning for Our Story page */
+.sketch-left {
+  right: 100%;
+  margin-right: 2rem;
+}
+
+.sketch-right {
+  left: 100%;
+  margin-left: 2rem;
+}
+
+.sketch-image {
+  width: auto;
+  height: auto;
+  max-width: 200px;
+}
+
+/* Larger sketches on wider screens */
+@media (min-width: 1400px) {
+  .sketch-left {
+    margin-right: 2.5rem;
+  }
+  .sketch-right {
+    margin-left: 2.5rem;
+  }
+  .sketch-image {
+    max-width: 260px;
+  }
+}
+
+@media (min-width: 1600px) {
+  .sketch-left {
+    margin-right: 3rem;
+  }
+  .sketch-right {
+    margin-left: 3rem;
+  }
+  .sketch-image {
+    max-width: 320px;
+  }
+}
+
+/* Sketch fade-in animation for Our Story page */
+.sketch-fade-in {
+  opacity: 0;
+  animation: sketchReveal linear both;
+  animation-timeline: view();
+  animation-range: entry 0% cover 40%;
+}
+
+@keyframes sketchReveal {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
   }
 }

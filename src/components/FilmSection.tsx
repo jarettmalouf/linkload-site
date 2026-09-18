@@ -9,18 +9,18 @@ export default function FilmSection() {
   const [isPlaying, setIsPlaying] = useState(false);
 
   return (
-    <section id="how-it-works" className="snap-section py-16 md:py-24 bg-void min-h-screen flex items-center justify-center">
-      <div className="w-full max-w-[90vw] xl:max-w-7xl mx-auto px-6">
-        <div className="text-center mb-8 md:mb-12">
+    <section id="how-it-works" className="section bg-graphite">
+      <div className="w-full max-w-6xl mx-auto h-full flex flex-col justify-center">
+        <div className="text-center mb-4 md:mb-6">
           <h2 className="text-fluid-section font-semibold text-paper tracking-tight">
             How It Works
           </h2>
-          <p className="text-fluid-subhead text-steel mt-3 max-w-2xl mx-auto">
+          <p className="text-fluid-subhead text-steel mt-2 max-w-2xl mx-auto">
             Watch LinkLoad in action.
           </p>
         </div>
 
-        <div className="relative aspect-video rounded-2xl overflow-hidden bg-graphite border border-charcoal">
+        <div className="relative aspect-video rounded-2xl overflow-hidden bg-graphite border border-charcoal max-h-[60vh]">
           {!isPlaying ? (
             <>
               {/* Poster/Thumbnail */}
