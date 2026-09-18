@@ -4,36 +4,19 @@ import { GeistMono } from "geist/font/mono";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "LinkLoad – The Washer-Dryer That Transfers Clothes for You",
+  title: "LinkLoad – frictionless laundry",
   description:
-    "A one-touch washer-dryer system with automatic transfer, queue-ready loading, and full appliance-grade performance. Start two loads at once and come back when everything's done.",
-  openGraph: {
-    title: "LinkLoad – The Washer-Dryer That Transfers Clothes for You",
-    description:
-      "A one-touch washer-dryer system with automatic transfer, queue-ready loading, and full appliance-grade performance.",
-    url: "https://linkload.co",
-    siteName: "LinkLoad",
-    type: "website",
-  },
-  twitter: {
-    card: "summary_large_image",
-    title: "LinkLoad – The Washer-Dryer That Transfers Clothes for You",
-    description:
-      "A one-touch washer-dryer system with automatic transfer, queue-ready loading, and full appliance-grade performance.",
-  },
+    "The only washer-dryer that moves your clothes for you. Start two loads, walk away.",
 };
 
 export default function RootLayout({
   children,
-}: {
+}: Readonly<{
   children: React.ReactNode;
-}) {
+}>) {
   return (
-    <html
-      lang="en"
-      className={`${GeistSans.variable} ${GeistMono.variable} antialiased`}
-    >
-      <body className="min-h-screen bg-void text-silver">{children}</body>
+    <html lang="en" className={`${GeistSans.variable} ${GeistMono.variable}`}>
+      <body className="antialiased">{children}</body>
     </html>
   );
 }

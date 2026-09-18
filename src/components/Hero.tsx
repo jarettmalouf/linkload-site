@@ -31,9 +31,15 @@ export default function Hero() {
             {/* Text content */}
             <div className="text-center lg:text-left">
               <h1 className="text-fluid-hero font-semibold text-paper tracking-tight">
-                Laundry, automated.
+                Laundry,
                 <br />
-                <span className="text-steel">Life, uninterrupted.</span>
+                automated.
+                <br />
+                <span className="text-steel">
+                  Life,
+                  <br />
+                  uninterrupted.
+                </span>
               </h1>
               <p className="text-fluid-subhead text-silver mt-[clamp(1rem,3vh,1.5rem)] lg:whitespace-nowrap">
                 The washer-dryer that moves your clothes for you.

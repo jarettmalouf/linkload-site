@@ -7,33 +7,33 @@ const CONCEPT_VIDEO_ID = "_igGh-44tT4";
 const sketches = [
   {
     src: "/images/sketches/linkload-sketch-ink-white.png",
-    top: 1400,
+    top: 600,
     scale: 1,
   },
   {
     src: "/images/sketches/linkload-sketch-2-ink-white.png",
-    top: 2600,
+    top: 2000,
     scale: 1,
   },
   {
     src: "/images/sketches/linkload-sketch-3-ink-white.png",
-    top: 3800,
+    top: 3400,
     scale: 1,
   },
   {
     src: "/images/sketches/linkload-sketch-4-ink-white.png",
-    top: 5000,
+    top: 4800,
     scale: 1,
   },
   {
     src: "/images/sketches/linkload_sketch_01_commercial-subsegments_white-ink.png",
     top: 6200,
-    scale: 1.3,
+    scale: 1.2,
   },
   {
     src: "/images/sketches/linkload_sketch_02_post-queue-drawer_white-ink.png",
-    top: 7400,
-    scale: 1.3,
+    top: 7800,
+    scale: 1,
   },
 ];
 
@@ -48,27 +48,19 @@ export default function OurStoryPage() {
           {/* Margin sketches - visible on xl+ screens (1280px+) */}
           {sketches.map((sketch, index) => {
             const isLeft = index % 2 === 0;
+            const isLast = index === sketches.length - 1;
             return (
               <div
                 key={sketch.src}
                 className={`hidden xl:block absolute sketch-fade-in ${
                   isLeft ? "sketch-left" : "sketch-right"
-                } ${sketch.scale > 1 ? "sketch-enhanced" : ""}`}
-                style={{ top: `${sketch.top}px` }}
+                }`}
+                style={isLast ? { bottom: "20rem" } : { top: `${sketch.top}px` }}
               >
-                <Image
+                <img
                   src={sketch.src}
                   alt={`Original LinkLoad sketch ${index + 1}`}
-                  width={Math.round(320 * sketch.scale)}
-                  height={Math.round(400 * sketch.scale)}
                   className="sketch-image"
-                  style={{
-                    maxWidth: `${Math.round(320 * sketch.scale)}px`,
-                    filter:
-                      sketch.scale > 1
-                        ? "brightness(1.9)"
-                        : undefined,
-                  }}
                 />
               </div>
             );
@@ -453,7 +445,7 @@ export default function OurStoryPage() {
                   src="/images/founder.png"
                   alt="Jarett Malouf"
                   fill
-                  className="object-cover rounded-full grayscale"
+                  className="object-cover rounded-full"
                 />
                 {/* Subtle blend overlay */}
                 <div className="absolute inset-0 rounded-full bg-gradient-to-br from-void/20 to-transparent" />
