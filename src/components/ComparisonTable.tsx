@@ -74,7 +74,7 @@ export default function ComparisonTable() {
       <div className="max-w-6xl mx-auto w-full flex flex-col justify-center">
         <div className="text-center mb-4 md:mb-6">
           <h2 className="text-fluid-section font-semibold text-paper tracking-tight">
-            How LinkLoad Stacks Up
+            How LinkLoad stacks up
           </h2>
           <p className="text-fluid-subhead text-steel mt-3 max-w-2xl mx-auto">
             The best of both worlds: the performance of premium pairs, with the
