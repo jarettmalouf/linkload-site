@@ -6,13 +6,23 @@ export default function Hero() {
 
       {/* Video background - right half on desktop, behind content on mobile */}
       <div className="absolute inset-0 lg:left-[45%] lg:w-[55%]">
+        {/* Desktop video */}
         <video
           src="/images/canvas.mp4"
           autoPlay
           muted
           loop
           playsInline
-          className="w-full h-full object-cover"
+          className="hidden lg:block w-full h-full object-cover"
+        />
+        {/* Mobile video (trimmed to avoid text conflict) */}
+        <video
+          src="/images/canvas-mobile.mp4"
+          autoPlay
+          muted
+          loop
+          playsInline
+          className="lg:hidden w-full h-full object-cover"
         />
         {/* Subtle gradient overlay - fades to page background, narrow fade width */}
         <div
