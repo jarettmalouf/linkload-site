@@ -6,7 +6,7 @@ const features = [
     linkload: true,
   },
   {
-    name: "Load parallelization (wash #2 while #1 dries)",
+    name: "Wash one load while another dries",
     pair: true,
     combo: false,
     linkload: true,
