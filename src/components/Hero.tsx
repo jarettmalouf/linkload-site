@@ -9,7 +9,6 @@ export default function Hero() {
         {/* Desktop video */}
         <video
           src="/images/canvas.mp4"
-          poster="/images/hero-poster.jpg"
           autoPlay
           muted
           loop
@@ -19,7 +18,6 @@ export default function Hero() {
         {/* Mobile video (trimmed to avoid text conflict) */}
         <video
           src="/images/canvas-mobile.mp4"
-          poster="/images/hero-poster.jpg"
           autoPlay
           muted
           loop
