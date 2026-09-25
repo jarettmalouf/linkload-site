@@ -1,4 +1,23 @@
+"use client";
+
+import { useState, useRef } from "react";
+
 export default function Hero() {
+  const [desktopVideoReady, setDesktopVideoReady] = useState(false);
+  const [mobileVideoReady, setMobileVideoReady] = useState(false);
+  const desktopVideoRef = useRef<HTMLVideoElement>(null);
+  const mobileVideoRef = useRef<HTMLVideoElement>(null);
+
+  const handleDesktopCanPlay = () => {
+    setDesktopVideoReady(true);
+    desktopVideoRef.current?.play();
+  };
+
+  const handleMobileCanPlay = () => {
+    setMobileVideoReady(true);
+    mobileVideoRef.current?.play();
+  };
+
   return (
     <section className="hero-section relative pt-20 overflow-hidden">
       {/* Background - matches page background */}
@@ -6,24 +25,60 @@ export default function Hero() {
 
       {/* Video background - right half on desktop, behind content on mobile */}
       <div className="absolute inset-0 lg:left-[45%] lg:w-[55%]">
+        {/* Desktop still image */}
+        <div
+          className={`hidden lg:block absolute inset-0 transition-opacity duration-[2500ms] ease-out ${
+            desktopVideoReady ? "opacity-0" : "opacity-100"
+          }`}
+        >
+          <img
+            src="/images/hero-poster.jpg"
+            alt=""
+            className="w-full h-full object-cover"
+          />
+        </div>
+
         {/* Desktop video */}
         <video
+          ref={desktopVideoRef}
           src="/images/canvas.mp4"
-          autoPlay
           muted
           loop
           playsInline
-          className="hidden lg:block w-full h-full object-cover"
+          preload="auto"
+          onCanPlayThrough={handleDesktopCanPlay}
+          className={`hidden lg:block w-full h-full object-cover transition-opacity duration-[2500ms] ease-out ${
+            desktopVideoReady ? "opacity-100" : "opacity-0"
+          }`}
         />
+
+        {/* Mobile still image */}
+        <div
+          className={`lg:hidden absolute inset-0 transition-opacity duration-[2500ms] ease-out ${
+            mobileVideoReady ? "opacity-0" : "opacity-100"
+          }`}
+        >
+          <img
+            src="/images/hero-poster.jpg"
+            alt=""
+            className="w-full h-full object-cover"
+          />
+        </div>
+
         {/* Mobile video (trimmed to avoid text conflict) */}
         <video
+          ref={mobileVideoRef}
           src="/images/canvas-mobile.mp4"
-          autoPlay
           muted
           loop
           playsInline
-          className="lg:hidden w-full h-full object-cover"
+          preload="auto"
+          onCanPlayThrough={handleMobileCanPlay}
+          className={`lg:hidden w-full h-full object-cover transition-opacity duration-[2500ms] ease-out ${
+            mobileVideoReady ? "opacity-100" : "opacity-0"
+          }`}
         />
+
         {/* Subtle gradient overlay - fades to page background, narrow fade width */}
         <div
           className="absolute inset-0"
