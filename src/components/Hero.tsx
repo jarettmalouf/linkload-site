@@ -24,7 +24,7 @@ export default function Hero() {
       const timer = setTimeout(() => {
         setShowDesktopVideo(true);
         desktopVideoRef.current?.play();
-      }, 1500);
+      }, 500);
       return () => clearTimeout(timer);
     }
   }, [desktopVideoReady]);
@@ -35,7 +35,7 @@ export default function Hero() {
       const timer = setTimeout(() => {
         setShowMobileVideo(true);
         mobileVideoRef.current?.play();
-      }, 1500);
+      }, 500);
       return () => clearTimeout(timer);
     }
   }, [mobileVideoReady]);
@@ -69,7 +69,7 @@ export default function Hero() {
           playsInline
           preload="auto"
           onCanPlayThrough={handleDesktopCanPlay}
-          className={`hidden lg:block w-full h-full object-cover transition-opacity duration-500 ease-out ${
+          className={`hidden lg:block w-full h-full object-cover transition-opacity duration-[1500ms] ease-out ${
             showDesktopVideo ? "opacity-100" : "opacity-0"
           }`}
         />
@@ -96,7 +96,7 @@ export default function Hero() {
           playsInline
           preload="auto"
           onCanPlayThrough={handleMobileCanPlay}
-          className={`lg:hidden w-full h-full object-cover transition-opacity duration-500 ease-out ${
+          className={`lg:hidden w-full h-full object-cover transition-opacity duration-[1500ms] ease-out ${
             showMobileVideo ? "opacity-100" : "opacity-0"
           }`}
         />
