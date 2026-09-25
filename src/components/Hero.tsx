@@ -18,25 +18,24 @@ export default function Hero() {
     setMobileVideoReady(true);
   };
 
-  // When desktop video is ready, fade out still, then fade in video
+  // When desktop video is ready, fade out still, then show video after fade completes
   useEffect(() => {
     if (desktopVideoReady) {
-      // Fade out still (1s), then after fade completes, show video
       const timer = setTimeout(() => {
         setShowDesktopVideo(true);
         desktopVideoRef.current?.play();
-      }, 1000);
+      }, 2000);
       return () => clearTimeout(timer);
     }
   }, [desktopVideoReady]);
 
-  // When mobile video is ready, fade out still, then fade in video
+  // When mobile video is ready, fade out still, then show video after fade completes
   useEffect(() => {
     if (mobileVideoReady) {
       const timer = setTimeout(() => {
         setShowMobileVideo(true);
         mobileVideoRef.current?.play();
-      }, 1000);
+      }, 2000);
       return () => clearTimeout(timer);
     }
   }, [mobileVideoReady]);
@@ -50,7 +49,7 @@ export default function Hero() {
       <div className="absolute inset-0 lg:left-[45%] lg:w-[55%]">
         {/* Desktop still image */}
         <div
-          className={`hidden lg:block absolute inset-0 transition-opacity duration-[3000ms] ease-out ${
+          className={`hidden lg:block absolute inset-0 transition-opacity duration-[2000ms] ease-out ${
             !desktopVideoReady ? "opacity-100" : "opacity-0"
           }`}
         >
@@ -77,7 +76,7 @@ export default function Hero() {
 
         {/* Mobile still image */}
         <div
-          className={`lg:hidden absolute inset-0 transition-opacity duration-[3000ms] ease-out ${
+          className={`lg:hidden absolute inset-0 transition-opacity duration-[2000ms] ease-out ${
             !mobileVideoReady ? "opacity-100" : "opacity-0"
           }`}
         >
