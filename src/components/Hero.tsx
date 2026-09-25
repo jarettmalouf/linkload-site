@@ -50,7 +50,7 @@ export default function Hero() {
       <div className="absolute inset-0 lg:left-[45%] lg:w-[55%]">
         {/* Desktop still image */}
         <div
-          className={`hidden lg:block absolute inset-0 transition-opacity duration-1000 ease-out ${
+          className={`hidden lg:block absolute inset-0 transition-opacity duration-[3000ms] ease-out ${
             !desktopVideoReady ? "opacity-100" : "opacity-0"
           }`}
         >
@@ -70,14 +70,14 @@ export default function Hero() {
           playsInline
           preload="auto"
           onCanPlayThrough={handleDesktopCanPlay}
-          className={`hidden lg:block w-full h-full object-cover transition-opacity duration-1000 ease-out ${
+          className={`hidden lg:block w-full h-full object-cover ${
             showDesktopVideo ? "opacity-100" : "opacity-0"
           }`}
         />
 
         {/* Mobile still image */}
         <div
-          className={`lg:hidden absolute inset-0 transition-opacity duration-1000 ease-out ${
+          className={`lg:hidden absolute inset-0 transition-opacity duration-[3000ms] ease-out ${
             !mobileVideoReady ? "opacity-100" : "opacity-0"
           }`}
         >
@@ -97,7 +97,7 @@ export default function Hero() {
           playsInline
           preload="auto"
           onCanPlayThrough={handleMobileCanPlay}
-          className={`lg:hidden w-full h-full object-cover transition-opacity duration-1000 ease-out ${
+          className={`lg:hidden w-full h-full object-cover ${
             showMobileVideo ? "opacity-100" : "opacity-0"
           }`}
         />
