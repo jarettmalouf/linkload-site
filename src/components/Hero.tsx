@@ -94,8 +94,9 @@ export default function Hero() {
           muted
           loop
           playsInline
+          autoPlay
           preload="auto"
-          onCanPlayThrough={handleMobileCanPlay}
+          onLoadedData={handleMobileCanPlay}
           className={`lg:hidden w-full h-full object-cover transition-opacity duration-[1500ms] ease-out ${
             showMobileVideo ? "opacity-100" : "opacity-0"
           }`}
