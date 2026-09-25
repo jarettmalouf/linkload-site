@@ -1,22 +1,52 @@
 "use client";
 
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 
 export default function Hero() {
+  const [stillVisible, setStillVisible] = useState(false);
   const [desktopVideoReady, setDesktopVideoReady] = useState(false);
   const [mobileVideoReady, setMobileVideoReady] = useState(false);
+  const [showDesktopVideo, setShowDesktopVideo] = useState(false);
+  const [showMobileVideo, setShowMobileVideo] = useState(false);
   const desktopVideoRef = useRef<HTMLVideoElement>(null);
   const mobileVideoRef = useRef<HTMLVideoElement>(null);
 
+  // Fade in still image on mount
+  useEffect(() => {
+    const timer = setTimeout(() => setStillVisible(true), 50);
+    return () => clearTimeout(timer);
+  }, []);
+
   const handleDesktopCanPlay = () => {
     setDesktopVideoReady(true);
-    desktopVideoRef.current?.play();
   };
 
   const handleMobileCanPlay = () => {
     setMobileVideoReady(true);
-    mobileVideoRef.current?.play();
   };
+
+  // When desktop video is ready, fade out still, then fade in video
+  useEffect(() => {
+    if (desktopVideoReady) {
+      // Fade out still (1s), then after fade completes, show video
+      const timer = setTimeout(() => {
+        setShowDesktopVideo(true);
+        desktopVideoRef.current?.play();
+      }, 1000);
+      return () => clearTimeout(timer);
+    }
+  }, [desktopVideoReady]);
+
+  // When mobile video is ready, fade out still, then fade in video
+  useEffect(() => {
+    if (mobileVideoReady) {
+      const timer = setTimeout(() => {
+        setShowMobileVideo(true);
+        mobileVideoRef.current?.play();
+      }, 1000);
+      return () => clearTimeout(timer);
+    }
+  }, [mobileVideoReady]);
 
   return (
     <section className="hero-section relative pt-20 overflow-hidden">
@@ -27,8 +57,8 @@ export default function Hero() {
       <div className="absolute inset-0 lg:left-[45%] lg:w-[55%]">
         {/* Desktop still image */}
         <div
-          className={`hidden lg:block absolute inset-0 transition-opacity duration-[2500ms] ease-out ${
-            desktopVideoReady ? "opacity-0" : "opacity-100"
+          className={`hidden lg:block absolute inset-0 transition-opacity duration-1000 ease-out ${
+            stillVisible && !desktopVideoReady ? "opacity-100" : "opacity-0"
           }`}
         >
           <img
@@ -47,15 +77,15 @@ export default function Hero() {
           playsInline
           preload="auto"
           onCanPlayThrough={handleDesktopCanPlay}
-          className={`hidden lg:block w-full h-full object-cover transition-opacity duration-[2500ms] ease-out ${
-            desktopVideoReady ? "opacity-100" : "opacity-0"
+          className={`hidden lg:block w-full h-full object-cover transition-opacity duration-1000 ease-out ${
+            showDesktopVideo ? "opacity-100" : "opacity-0"
           }`}
         />
 
         {/* Mobile still image */}
         <div
-          className={`lg:hidden absolute inset-0 transition-opacity duration-[2500ms] ease-out ${
-            mobileVideoReady ? "opacity-0" : "opacity-100"
+          className={`lg:hidden absolute inset-0 transition-opacity duration-1000 ease-out ${
+            stillVisible && !mobileVideoReady ? "opacity-100" : "opacity-0"
           }`}
         >
           <img
@@ -74,8 +104,8 @@ export default function Hero() {
           playsInline
           preload="auto"
           onCanPlayThrough={handleMobileCanPlay}
-          className={`lg:hidden w-full h-full object-cover transition-opacity duration-[2500ms] ease-out ${
-            mobileVideoReady ? "opacity-100" : "opacity-0"
+          className={`lg:hidden w-full h-full object-cover transition-opacity duration-1000 ease-out ${
+            showMobileVideo ? "opacity-100" : "opacity-0"
           }`}
         />
 
