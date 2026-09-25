@@ -3,19 +3,12 @@
 import { useState, useRef, useEffect } from "react";
 
 export default function Hero() {
-  const [stillVisible, setStillVisible] = useState(false);
   const [desktopVideoReady, setDesktopVideoReady] = useState(false);
   const [mobileVideoReady, setMobileVideoReady] = useState(false);
   const [showDesktopVideo, setShowDesktopVideo] = useState(false);
   const [showMobileVideo, setShowMobileVideo] = useState(false);
   const desktopVideoRef = useRef<HTMLVideoElement>(null);
   const mobileVideoRef = useRef<HTMLVideoElement>(null);
-
-  // Fade in still image on mount
-  useEffect(() => {
-    const timer = setTimeout(() => setStillVisible(true), 50);
-    return () => clearTimeout(timer);
-  }, []);
 
   const handleDesktopCanPlay = () => {
     setDesktopVideoReady(true);
@@ -58,7 +51,7 @@ export default function Hero() {
         {/* Desktop still image */}
         <div
           className={`hidden lg:block absolute inset-0 transition-opacity duration-1000 ease-out ${
-            stillVisible && !desktopVideoReady ? "opacity-100" : "opacity-0"
+            !desktopVideoReady ? "opacity-100" : "opacity-0"
           }`}
         >
           <img
@@ -85,7 +78,7 @@ export default function Hero() {
         {/* Mobile still image */}
         <div
           className={`lg:hidden absolute inset-0 transition-opacity duration-1000 ease-out ${
-            stillVisible && !mobileVideoReady ? "opacity-100" : "opacity-0"
+            !mobileVideoReady ? "opacity-100" : "opacity-0"
           }`}
         >
           <img
