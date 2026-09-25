@@ -18,24 +18,24 @@ export default function Hero() {
     setMobileVideoReady(true);
   };
 
-  // When desktop video is ready, fade out still, then show video after fade completes
+  // When desktop video is ready, fade out still and cross-fade to video
   useEffect(() => {
     if (desktopVideoReady) {
       const timer = setTimeout(() => {
         setShowDesktopVideo(true);
         desktopVideoRef.current?.play();
-      }, 2000);
+      }, 1500);
       return () => clearTimeout(timer);
     }
   }, [desktopVideoReady]);
 
-  // When mobile video is ready, fade out still, then show video after fade completes
+  // When mobile video is ready, fade out still and cross-fade to video
   useEffect(() => {
     if (mobileVideoReady) {
       const timer = setTimeout(() => {
         setShowMobileVideo(true);
         mobileVideoRef.current?.play();
-      }, 2000);
+      }, 1500);
       return () => clearTimeout(timer);
     }
   }, [mobileVideoReady]);
@@ -69,7 +69,7 @@ export default function Hero() {
           playsInline
           preload="auto"
           onCanPlayThrough={handleDesktopCanPlay}
-          className={`hidden lg:block w-full h-full object-cover ${
+          className={`hidden lg:block w-full h-full object-cover transition-opacity duration-500 ease-out ${
             showDesktopVideo ? "opacity-100" : "opacity-0"
           }`}
         />
@@ -96,7 +96,7 @@ export default function Hero() {
           playsInline
           preload="auto"
           onCanPlayThrough={handleMobileCanPlay}
-          className={`lg:hidden w-full h-full object-cover ${
+          className={`lg:hidden w-full h-full object-cover transition-opacity duration-500 ease-out ${
             showMobileVideo ? "opacity-100" : "opacity-0"
           }`}
         />
