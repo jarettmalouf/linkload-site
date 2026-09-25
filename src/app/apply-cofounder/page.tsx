@@ -172,10 +172,6 @@ export default function ApplyCofounderPage() {
             <h1 className="text-2xl sm:text-3xl font-semibold text-paper tracking-tight">
               Mechanical Co-Founder
             </h1>
-            <p className="text-silver mt-3 leading-relaxed">
-              We&apos;re building the washer-dryer that moves the clothes for you.
-              Two loads, one touch.
-            </p>
             <a
               href="/cofounder-role.pdf"
               target="_blank"
