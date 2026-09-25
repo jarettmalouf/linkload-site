@@ -4,7 +4,7 @@ import type { NextRequest } from "next/server";
 const GATE_COOKIE_NAME = "linkload_access";
 
 // Routes that don't require authentication
-const PUBLIC_ROUTES = ["/gate", "/api/gate"];
+const PUBLIC_ROUTES = ["/gate", "/api/gate", "/apply-cofounder", "/api/apply-cofounder"];
 
 // Check if path starts with any public route
 function isPublicRoute(pathname: string): boolean {
