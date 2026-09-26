@@ -1,13 +1,14 @@
 "use client";
 
-import { useState, useRef, useEffect } from "react";
+// import { useState, useRef, useEffect } from "react";
 
 export default function Hero() {
+  /* POSTER + CROSSFADE DISABLED - uncomment to re-enable
   const [desktopVideoReady, setDesktopVideoReady] = useState(false);
   const [mobileVideoReady, setMobileVideoReady] = useState(false);
   const [showDesktopVideo, setShowDesktopVideo] = useState(false);
   const [showMobileVideo, setShowMobileVideo] = useState(false);
-    const desktopVideoRef = useRef<HTMLVideoElement>(null);
+  const desktopVideoRef = useRef<HTMLVideoElement>(null);
   const mobileVideoRef = useRef<HTMLVideoElement>(null);
 
   const handleDesktopCanPlay = () => {
@@ -18,7 +19,6 @@ export default function Hero() {
     setMobileVideoReady(true);
   };
 
-  
   // When desktop video is ready, fade out still and cross-fade to video
   useEffect(() => {
     if (desktopVideoReady) {
@@ -40,6 +40,7 @@ export default function Hero() {
       return () => clearTimeout(timer);
     }
   }, [mobileVideoReady]);
+  */
 
   return (
     <section className="hero-section relative pt-20 overflow-hidden">
@@ -48,7 +49,7 @@ export default function Hero() {
 
       {/* Video background - right half on desktop, behind content on mobile */}
       <div className="absolute inset-0 lg:left-[45%] lg:w-[55%]">
-        {/* Desktop still image */}
+        {/* POSTER DISABLED - uncomment to re-enable
         <div
           className={`hidden lg:block absolute inset-0 transition-opacity duration-[2000ms] ease-out ${
             !desktopVideoReady ? "opacity-100" : "opacity-0"
@@ -60,22 +61,20 @@ export default function Hero() {
             className="w-full h-full object-cover"
           />
         </div>
+        */}
 
         {/* Desktop video */}
         <video
-          ref={desktopVideoRef}
           src="/images/canvas.mp4"
           muted
           loop
           playsInline
+          autoPlay
           preload="auto"
-          onCanPlayThrough={handleDesktopCanPlay}
-          className={`hidden lg:block w-full h-full object-cover transition-opacity duration-[1500ms] ease-out ${
-            showDesktopVideo ? "opacity-100" : "opacity-0"
-          }`}
+          className="hidden lg:block w-full h-full object-cover"
         />
 
-        {/* Mobile still image */}
+        {/* POSTER DISABLED - uncomment to re-enable
         <div
           className={`lg:hidden absolute inset-0 transition-opacity duration-[2000ms] ease-out ${
             !mobileVideoReady ? "opacity-100" : "opacity-0"
@@ -87,20 +86,17 @@ export default function Hero() {
             className="w-full h-full object-cover"
           />
         </div>
+        */}
 
-        {/* Mobile video (trimmed to avoid text conflict) */}
+        {/* Mobile video */}
         <video
-          ref={mobileVideoRef}
           src="/images/canvas-mobile.mp4"
           muted
           loop
           playsInline
           autoPlay
           preload="auto"
-          onLoadedData={handleMobileCanPlay}
-          className={`lg:hidden w-full h-full object-cover transition-opacity duration-[1500ms] ease-out ${
-            showMobileVideo ? "opacity-100" : "opacity-0"
-          }`}
+          className="lg:hidden w-full h-full object-cover"
         />
 
         {/* Subtle gradient overlay - fades to page background, narrow fade width */}
