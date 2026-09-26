@@ -124,7 +124,7 @@ export default function WaitlistForm() {
       <div className="max-w-xl mx-auto w-full">
         <div className="text-center mb-8 md:mb-12">
           <h2 className="text-fluid-section font-semibold text-paper tracking-tight">
-            Apply to Pre-Order
+            Join the Queue
           </h2>
           <p className="text-fluid-subhead text-steel mt-4">
             Limited early access. We review every application.
