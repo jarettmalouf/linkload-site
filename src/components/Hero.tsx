@@ -7,6 +7,7 @@ export default function Hero() {
   const [mobileVideoReady, setMobileVideoReady] = useState(false);
   const [showDesktopVideo, setShowDesktopVideo] = useState(false);
   const [showMobileVideo, setShowMobileVideo] = useState(false);
+  const [mobileDebug, setMobileDebug] = useState("waiting");
   const desktopVideoRef = useRef<HTMLVideoElement>(null);
   const mobileVideoRef = useRef<HTMLVideoElement>(null);
 
@@ -15,7 +16,21 @@ export default function Hero() {
   };
 
   const handleMobileCanPlay = () => {
+    setMobileDebug("loadeddata fired");
     setMobileVideoReady(true);
+  };
+
+  const handleMobileError = (e: React.SyntheticEvent<HTMLVideoElement>) => {
+    const video = e.currentTarget;
+    setMobileDebug(`error: ${video.error?.message || "unknown"}`);
+  };
+
+  const handleMobilePlaying = () => {
+    setMobileDebug(prev => prev + " | playing");
+  };
+
+  const handleMobileStalled = () => {
+    setMobileDebug(prev => prev + " | stalled");
   };
 
   // When desktop video is ready, fade out still and cross-fade to video
@@ -97,10 +112,18 @@ export default function Hero() {
           autoPlay
           preload="auto"
           onLoadedData={handleMobileCanPlay}
+          onError={handleMobileError}
+          onPlaying={handleMobilePlaying}
+          onStalled={handleMobileStalled}
           className={`lg:hidden w-full h-full object-cover transition-opacity duration-[1500ms] ease-out ${
             showMobileVideo ? "opacity-100" : "opacity-0"
           }`}
         />
+
+        {/* DEBUG - remove after testing */}
+        <div className="lg:hidden absolute bottom-4 left-4 bg-black/80 text-white text-xs p-2 rounded z-50">
+          {mobileDebug} | ready:{mobileVideoReady ? "Y" : "N"} | show:{showMobileVideo ? "Y" : "N"}
+        </div>
 
         {/* Subtle gradient overlay - fades to page background, narrow fade width */}
         <div
