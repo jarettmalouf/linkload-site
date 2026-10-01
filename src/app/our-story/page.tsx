@@ -286,8 +286,8 @@ export default function OurStoryPage() {
           </section>
 
           {/* Author Attribution */}
-          <footer className="border-t border-charcoal pt-16">
-            <div className="flex flex-col sm:flex-row items-center gap-8">
+          <footer className="border-t border-charcoal pt-8 sm:pt-16 pb-4 sm:pb-0">
+            <div className="flex flex-col sm:flex-row items-center gap-4 sm:gap-8">
               <div className="relative w-36 h-36 sm:w-44 sm:h-44 flex-shrink-0">
                 <Image
                   src="/images/founder.png"
