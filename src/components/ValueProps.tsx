@@ -70,7 +70,7 @@ export default function ValueProps() {
             What's unique about LinkLoad
           </h2>
           <p className="text-fluid-subhead text-steel mt-3 max-w-2xl mx-auto">
-            It's the first system that address both elephants in the room:
+            It's the first system that addresses both elephants in the room:{" "}
             <br className="hidden sm:block" />
             manual transfer is a hassle, and 2-in-1s are a compromise.
           </p>
