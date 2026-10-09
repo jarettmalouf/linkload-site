@@ -7,19 +7,68 @@ import FAQ from "@/components/FAQ";
 import WaitlistForm from "@/components/WaitlistForm";
 import Footer from "@/components/Footer";
 
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Organization",
+      "@id": "https://linkload.co/#organization",
+      name: "LinkLoad",
+      url: "https://linkload.co",
+      logo: {
+        "@type": "ImageObject",
+        url: "https://linkload.co/images/logo.png",
+      },
+      description:
+        "LinkLoad is building the first automated laundry system that transfers clothes from washer to dryer automatically.",
+      sameAs: [],
+    },
+    {
+      "@type": "WebSite",
+      "@id": "https://linkload.co/#website",
+      url: "https://linkload.co",
+      name: "LinkLoad",
+      publisher: {
+        "@id": "https://linkload.co/#organization",
+      },
+    },
+    {
+      "@type": "Product",
+      "@id": "https://linkload.co/#product",
+      name: "LinkLoad Automated Laundry System",
+      description:
+        "The first washer-dryer that automatically transfers clothes from washer to dryer. Start two loads, walk away.",
+      brand: {
+        "@type": "Brand",
+        name: "LinkLoad",
+      },
+      manufacturer: {
+        "@id": "https://linkload.co/#organization",
+      },
+      category: "Home Appliances",
+    },
+  ],
+};
+
 export default function Home() {
   return (
-    <div className="home-container">
-      <Header />
-      <Hero />
-      <div className="content-sections">
-        <FilmSection />
-        <ValueProps />
-        <ComparisonTable />
-        <FAQ />
-        <WaitlistForm />
-        <Footer />
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
+      <div className="home-container">
+        <Header />
+        <Hero />
+        <div className="content-sections">
+          <FilmSection />
+          <ValueProps />
+          <ComparisonTable />
+          <FAQ />
+          <WaitlistForm />
+          <Footer />
+        </div>
       </div>
-    </div>
+    </>
   );
 }
