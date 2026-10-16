@@ -12,6 +12,8 @@ const PUBLIC_ROUTES = [
   "/api/health",
   "/sitemap.xml",
   "/robots.txt",
+  "/our-story",
+  "/contact",
 ];
 
 // Check if path starts with any public route
