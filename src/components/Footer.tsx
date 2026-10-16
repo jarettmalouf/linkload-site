@@ -8,11 +8,11 @@ export default function Footer() {
         <div className="flex flex-col md:flex-row items-center justify-between gap-6">
           <div className="flex items-center gap-3">
             <Image
-              src="/images/logo.svg"
+              src="/images/logo-white.png"
               alt="LinkLoad"
               width={28}
               height={28}
-              className="w-7 h-7 flex-shrink-0 invert"
+              className="w-7 h-7 flex-shrink-0"
             />
             <span className="text-paper font-medium">LinkLoad</span>
           </div>

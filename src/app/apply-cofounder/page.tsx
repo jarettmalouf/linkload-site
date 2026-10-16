@@ -224,7 +224,7 @@ export default function ApplyCofounderPage() {
       <div className="min-h-screen bg-void flex flex-col">
         <header className="p-6">
           <Image
-            src="/images/logo.png"
+            src="/images/logo-white.png"
             alt="LinkLoad"
             width={120}
             height={28}
@@ -264,7 +264,7 @@ export default function ApplyCofounderPage() {
     <div className="min-h-screen bg-void flex flex-col">
       <header className="p-6">
         <Image
-          src="/images/logo.png"
+          src="/images/logo-white.png"
           alt="LinkLoad"
           width={120}
           height={28}

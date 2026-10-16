@@ -7,11 +7,11 @@ export default function Header() {
       <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
         <Link href="/" className="flex items-center gap-3">
           <Image
-            src="/images/logo.svg"
+            src="/images/logo-white.png"
             alt="LinkLoad"
             width={32}
             height={32}
-            className="w-8 h-8 flex-shrink-0 invert"
+            className="w-8 h-8 flex-shrink-0"
           />
           <span className="text-paper font-medium text-lg tracking-tight">
             LinkLoad

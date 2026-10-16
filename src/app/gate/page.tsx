@@ -50,7 +50,7 @@ export default function GatePage() {
         {/* Logo */}
         <div className="flex justify-center mb-12">
           <Image
-            src="/images/logo.png"
+            src="/images/logo-white.png"
             alt="LinkLoad"
             width={180}
             height={40}
