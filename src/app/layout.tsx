@@ -5,7 +5,7 @@ import "./globals.css";
 
 export const metadata: Metadata = {
   title: {
-    default: "LinkLoad – The Washer-Dryer That Transfers Clothes for You",
+    default: "LinkLoad – The washer-dryer that transfers clothes for you",
     template: "%s | LinkLoad",
   },
   description:
@@ -32,7 +32,7 @@ export const metadata: Metadata = {
     locale: "en_US",
     url: "https://linkload.co",
     siteName: "LinkLoad",
-    title: "LinkLoad – The Washer-Dryer That Transfers Clothes for You",
+    title: "LinkLoad – The washer-dryer that transfers clothes for you",
     description:
       "The first automated laundry system that moves your clothes from washer to dryer. Start two loads, walk away.",
     images: [
@@ -46,7 +46,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "LinkLoad – The Washer-Dryer That Transfers Clothes for You",
+    title: "LinkLoad – The washer-dryer that transfers clothes for you",
     description:
       "The first automated laundry system that moves your clothes from washer to dryer.",
     images: ["/images/og-image.png"],
