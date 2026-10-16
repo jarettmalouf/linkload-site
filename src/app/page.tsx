@@ -47,6 +47,33 @@ const jsonLd = {
       },
       category: "Home Appliances",
     },
+    {
+      "@type": "SiteNavigationElement",
+      "@id": "https://linkload.co/#navigation",
+      name: "Main Navigation",
+      hasPart: [
+        {
+          "@type": "SiteNavigationElement",
+          name: "Watch the Demo",
+          url: "https://linkload.co/#how-it-works",
+        },
+        {
+          "@type": "SiteNavigationElement",
+          name: "Our Story",
+          url: "https://linkload.co/our-story",
+        },
+        {
+          "@type": "SiteNavigationElement",
+          name: "Contact Us",
+          url: "https://linkload.co/contact",
+        },
+        {
+          "@type": "SiteNavigationElement",
+          name: "Join the Queue",
+          url: "https://linkload.co/#waitlist",
+        },
+      ],
+    },
   ],
 };
 

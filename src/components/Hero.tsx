@@ -48,7 +48,7 @@ export default function Hero() {
       <div className="absolute inset-0 bg-void" />
 
       {/* Video background - right half on desktop, behind content on mobile */}
-      <div className="absolute inset-0 lg:left-[45%] lg:w-[55%]">
+      <div className="absolute inset-0 xl:left-[45%] xl:w-[55%]">
         {/* POSTER DISABLED - uncomment to re-enable
         <div
           className={`hidden lg:block absolute inset-0 transition-opacity duration-[2000ms] ease-out ${
@@ -71,7 +71,7 @@ export default function Hero() {
           playsInline
           autoPlay
           preload="auto"
-          className="hidden lg:block w-full h-full object-cover"
+          className="hidden xl:block w-full h-full object-cover"
         />
 
         {/* POSTER DISABLED - uncomment to re-enable
@@ -96,7 +96,7 @@ export default function Hero() {
           playsInline
           autoPlay
           preload="auto"
-          className="lg:hidden w-full h-full object-cover"
+          className="xl:hidden w-full h-full object-cover"
         />
 
         {/* Subtle gradient overlay - fades to page background, narrow fade width */}
@@ -111,10 +111,10 @@ export default function Hero() {
 
       {/* Hero content */}
       <div className="relative z-10 h-full flex items-center">
-        <div className="lg:pl-[8%] px-6 py-[clamp(2rem,8vh,6rem)] w-full">
-          <div className="lg:w-[40%]">
+        <div className="xl:pl-[8%] px-6 py-[clamp(2rem,8vh,6rem)] w-full">
+          <div className="xl:w-[40%]">
             {/* Text content */}
-            <div className="text-center lg:text-left">
+            <div className="text-center xl:text-left">
               <h1 className="text-fluid-hero font-semibold text-paper tracking-tight">
                 Laundry,
                 <br />
@@ -126,13 +126,13 @@ export default function Hero() {
                   uninterrupted.
                 </span>
               </h1>
-              <p className="text-fluid-subhead text-silver mt-[clamp(1rem,3vh,1.5rem)] lg:whitespace-nowrap">
+              <p className="text-fluid-subhead text-silver mt-[clamp(1rem,3vh,1.5rem)] xl:whitespace-nowrap">
                 The washer-dryer that moves your clothes for you.
               </p>
               <p className="text-fluid-subhead text-silver mt-1">
                 Start two loads and walk away.
               </p>
-              <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 mt-[clamp(1.5rem,5vh,2.5rem)] justify-center lg:justify-start">
+              <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 mt-[clamp(1.5rem,5vh,2.5rem)] justify-center xl:justify-start">
                 <a
                   href="#how-it-works"
                   className="bg-paper hover:bg-paper/90 text-void font-medium px-6 py-3 sm:px-8 sm:py-4 rounded-lg transition-colors text-center text-sm sm:text-base"
