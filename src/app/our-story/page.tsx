@@ -74,7 +74,7 @@ export default function OurStoryPage() {
               Our Story
             </h1>
             <p className="text-xl md:text-2xl text-steel mt-6 font-light italic">
-              How an injury revealed a universal frustration
+              How a bad back made me fix laundry
             </p>
           </header>
 
