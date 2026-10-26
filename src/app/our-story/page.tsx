@@ -72,7 +72,7 @@ export default function OurStoryPage() {
               Our Story
             </h1>
             <p className="text-xl md:text-2xl text-steel mt-6 font-light italic">
-              How the modern state of laundry drove me over the edge
+              How an injury revealed a universal frustration
             </p>
           </header>
 
@@ -95,29 +95,28 @@ export default function OurStoryPage() {
           {/* Essay */}
           <section className="mb-12">
             <h2 className="text-3xl md:text-4xl font-medium text-paper mb-8 tracking-tight">
-              One Rainy Night in Seattle
+              A Chilly Seattle Morning
             </h2>
             <div className="space-y-8 text-lg md:text-xl text-silver leading-relaxed font-light">
               <p>
-                While working as a software engineer in Seattle, I lived in a
-                small one-bedroom apartment with a stacked washer and dryer.
-                About once a week, after a long day of work, I&apos;d come home,
-                change into workout clothes, hit the gym up the road, and return
-                by 7 or 8 p.m. to start a load of laundry. While it ran,
-                I&apos;d do some combination of showering, making dinner,
-                watching tennis highlights, and FaceTiming friends.
+                In early 2025, I suffered a debilitating back injury while
+                playing tennis. An overly ambitious, overly pronated serve, my
+                first of the day on a chilly Seattle morning, left me doubled
+                over and yelping on the dewy baseline. I had slipped the disc
+                between my L5 and S1 vertebrae and torn a muscle in my lower
+                back. The pain was excruciating, and the months that followed
+                were eye-opening.
               </p>
               <p>
-                Too subsumed by a conversation, too cozy after a shower, or too
-                full after a third helping of spaghetti and meatballs, nearly
-                half the time I&apos;d forget the load entirely. (It didn&apos;t
-                help that the machines lived in a soundproof closet, down a long
-                corridor from the carpeted bedroom.) I&apos;d wake the next
-                morning vexed, my clothes now wet, mildewy, and in need of a
-                second wash — a realization that always arrived right before
-                work, when I didn&apos;t have an hour to stick around and rerun
-                them. So I&apos;d acquiesce to the compounding mildew and wait
-                until that night to try again.
+                Chores were a pain, and none more than laundry. Repeatedly
+                hunching down into my top-load washer and heaving wet clothes
+                into the dryer above was exactly the kind of activity my back
+                wouldn&apos;t abide. On top of the physical challenge, the task
+                proved logistically cumbersome. I had to ask my roommates, or
+                occasionally my parents, to assist at a time when they would be
+                around for several uninterrupted hours. Before we&apos;d found a
+                groove, there were many weeks I&apos;d quietly re-wear a pair of
+                dirty socks or underwear.
               </p>
 
               {/* Mobile sketch 1 */}
@@ -130,29 +129,24 @@ export default function OurStoryPage() {
               </div>
 
               <p>
-                One twice-forgotten load, on a rainy Thursday in April 2025,
-                broke me. I needed a few important sets of clothes for a weekend
-                trip to Lopez Island, where a friend of a friend worked as a
-                cartographer. The night before, I&apos;d started the load after
-                getting home past 11 p.m. — a rarity, but not a novelty — and,
-                true to form, forgot it, waking to the smell of damp cotton in
-                the corridor. The next night I got home even later, having spent
-                an exhausting day trying to ship a project we&apos;d been
-                finalizing for weeks. I reran the wash, warmed up a Trader
-                Joe&apos;s frozen dinner, and helplessly dozed on the couch
-                while babysitting the deployment.
+                This indignity was not my first gripe with laundry. As a clean
+                freak growing up, I resented how the manual transfer step would
+                invariably lead to a dropped sock or two, at its wettest and
+                cleanest, onto the dusty floor. I&apos;m also a comically
+                forgetful person, a couple standard deviations above the mean. I
+                couldn&apos;t count on ten hands the number of times I&apos;ve
+                forgotten to transfer my wet laundry and woken to the painful
+                realization that I&apos;d need to rerun the wash to get rid of
+                the mildew that had accumulated overnight.
               </p>
               <p>
-                When I woke at 1 a.m. with a start, I shout-grunted into my
-                empty apartment and transferred the clothes, accepting the
-                low-level mildew at this point. I stood in front of the
-                machines, livid, reckoning with a task that required so much of
-                me yet so little at the same time. I enumerated the steps on my
-                fingers: (1) open the washer and dryer doors, (2) gather three
-                to five wet armfuls of clothes and hoist them to the dryer three
-                feet away, (3) pick up and brush off the loose socks that
-                inevitably fall in transit, (4) close the doors, (5) toss in a
-                dryer sheet, (6) select the settings, and (7) press Start.
+                One night, lying in bed with a heating pad under my lumbar, I
+                heard my wash finish. My roommate had already fallen asleep, and
+                feeling guilty at the idea of waking him after his fourteen-hour
+                workday, I strained to move the load myself. Sweating through my
+                shirt, I felt a compensatory twinge between my shoulder blades.
+                I couldn&apos;t even start the dryer; I needed to lie back down
+                immediately.
               </p>
 
               {/* Mobile sketch 2 */}
@@ -165,15 +159,14 @@ export default function OurStoryPage() {
               </div>
 
               <p>
-                I had already spent a comical amount of my life thinking about
-                the sock problem. Every time a sock hits the floor, it bonds to
-                dust and dirt at the worst possible juncture: when it is both
-                cleanest and wettest. As the dryer spun before me that late
-                April night, my eyes drifted to the corners of the machines.
-                Perhaps a result of my sleep-deprived stupor, the borders
-                between the machines faded and my imagination took over.
+                Humiliated, furious, and incredulous at the state of modern
+                laundry machines, which sit a few feet from our automatic coffee
+                maker and in the same closet as our robot vacuum, I pulled out
+                my Rollbahn notebook and started ideating on the obvious
+                solution: an auto-transferring washer-dryer.
               </p>
               <p>
+                I wrote,{" "}
                 <i>
                   What if it were one tall enclosure, so the clothes never had
                   to exit and re-enter between wash and dry?
@@ -205,18 +198,11 @@ export default function OurStoryPage() {
               </div>
 
               <p>
-                Standing before the machine with a black Pilot G2 and a Rollbahn
-                notebook, I started drawing. By 3 a.m., I had filled seven or
-                eight pages of sketches and musings under a scribbled header:
-                &ldquo;LinkLoad.&rdquo;
-              </p>
-              <p>
-                When I got back from Lopez Island, I missed two consecutive days
-                of work to produce a manifesto perforated with colorful Figma
-                diagrams — thirty-some-odd hours of uninterrupted me-at-my-desk
-                time. What emerged was a hardware system with a software ethos:
-                everything that was formerly assigned to the user, methodically
-                abstracted away.
+                Energized by a solution that might cure my indignity, I missed
+                two consecutive days of work to produce a manifesto perforated
+                with colorful Figma diagrams. What emerged was a hardware system
+                with a software ethos: everything that was formerly assigned to
+                the user, methodically abstracted away.
               </p>
 
               {/* Mobile sketch 4 */}
@@ -233,16 +219,15 @@ export default function OurStoryPage() {
                 summed up in one word, a word I must have written north of
                 twenty times in that initial design document:{" "}
                 <em className="text-paper not-italic">unburden</em>. Driving the
-                design was this one singular goal, which served many flavors of
-                laundry-user: liberate multi-child households from full days of
-                trivial labor; reduce friction between roommates; let the
-                exhausted workhorses sleep after a long day.
+                design was this singular goal, which served all flavors of
+                laundry-doer, from multi-child parents to appliance-sharing
+                roommates to invalids like myself.
               </p>
               <p>
-                That 1 a.m. frustration is where LinkLoad traces its origins.
-                But my story isn&apos;t unusual; it&apos;s ubiquitous, and
-                that&apos;s the founding principle. Every laundry user lives
-                some version of it every time they do laundry.
+                My injury is where LinkLoad traces its origins. But the
+                frustration behind it isn&apos;t unusual; it&apos;s ubiquitous,
+                and also the founding principle. Every laundry user lives some
+                version of it every time they do laundry.
               </p>
 
               {/* Mobile sketch 5 */}
@@ -255,14 +240,13 @@ export default function OurStoryPage() {
               </div>
 
               <p>
-                People misconceive that the problem with laundry is the two
-                minutes it takes to move the clothes and start the dryer. The
-                real problem is the time around it, the forsaken bookends. This
-                two-minute activity is not a two-minute activity; it&apos;s
-                multiple hours of overhead and overhang. Sometimes it even feels
-                like, or proves to be, a multi-day battle, getting a load or two
-                fully cleaned and back in the drawers (or maybe that&apos;s just
-                me).
+                People assume the opportunity cost is the minute or two it takes
+                to move the clothes and start the dryer. The real cost, however,
+                is the time around it, the forsaken bookends. This two-minute
+                activity is not a two-minute activity; it&apos;s multiple hours
+                of passive attention and logistical overhead. Sometimes it even
+                feels like, or proves to be, a multi-day battle to get a load or
+                two fully washed, dried, and back in the drawers.
               </p>
 
               {/* Mobile sketch 6 */}
@@ -275,12 +259,11 @@ export default function OurStoryPage() {
               </div>
 
               <p>
-                But while the industry incrementally improves the tech year
-                after year, it becomes clear that nobody is making it their
-                mission to optimize the workflow. Which is why a company built
-                for exactly this problem, small and obsessed by design,
-                untethered to established paradigms, is the natural author of
-                its solution.
+                The industry incrementally improves the chemistry and the
+                internals year after year, but nobody is making it their mission
+                to optimize the workflow. That&apos;s why a company built for
+                exactly this problem, small and obsessed by design, untethered
+                to established paradigms, is the natural author of its solution.
               </p>
             </div>
           </section>
