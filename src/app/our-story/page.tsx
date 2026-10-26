@@ -55,7 +55,9 @@ export default function OurStoryPage() {
                 className={`hidden xl:block absolute sketch-fade-in ${
                   isLeft ? "sketch-left" : "sketch-right"
                 }`}
-                style={isLast ? { bottom: "18rem" } : { top: `${sketch.top}px` }}
+                style={
+                  isLast ? { bottom: "18rem" } : { top: `${sketch.top}px` }
+                }
               >
                 <img
                   src={sketch.src}
@@ -95,7 +97,7 @@ export default function OurStoryPage() {
           {/* Essay */}
           <section className="mb-12">
             <h2 className="text-3xl md:text-4xl font-medium text-paper mb-8 tracking-tight">
-              A Chilly Seattle Morning
+              One Chilly Seattle Morning...
             </h2>
             <div className="space-y-8 text-lg md:text-xl text-silver leading-relaxed font-light">
               <p>
@@ -163,7 +165,7 @@ export default function OurStoryPage() {
                 laundry machines, which sit a few feet from our automatic coffee
                 maker and in the same closet as our robot vacuum, I pulled out
                 my Rollbahn notebook and started ideating on the obvious
-                solution: an auto-transferring washer-dryer.
+                solution: an auto-transfer washer-dryer.
               </p>
               <p>
                 I wrote,{" "}
