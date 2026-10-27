@@ -33,21 +33,6 @@ const jsonLd = {
       },
     },
     {
-      "@type": "Product",
-      "@id": "https://linkload.co/#product",
-      name: "LinkLoad Automated Laundry System",
-      description:
-        "The first washer-dryer that automatically transfers clothes from washer to dryer. Start two loads, walk away.",
-      brand: {
-        "@type": "Brand",
-        name: "LinkLoad",
-      },
-      manufacturer: {
-        "@id": "https://linkload.co/#organization",
-      },
-      category: "Home Appliances",
-    },
-    {
       "@type": "SiteNavigationElement",
       "@id": "https://linkload.co/#navigation",
       name: "Main Navigation",
