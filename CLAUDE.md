@@ -75,7 +75,7 @@ The washer and dryer are independently optimized (not a 2-in-1 combo). LinkLoad 
 
 - **Canonical URL:** `linkload.co` (www redirects to it)
 - **Current film:** YouTube ID `BeLTB3nu2bY`
-- **Page title:** "LinkLoad – The washer-dryer that transfers clothes for you"
+- **Page title:** "LinkLoad – frictionless laundry"
 - **All copy:** Present tense, as though LinkLoad already exists
 - **Pricing (Product page):** $3,999 MSRP (single config value)
 - **Gate mode:** Manual approval with invite links (v2)
