@@ -1,61 +1,35 @@
 import { NextResponse } from "next/server";
-import { supabase } from "@/lib/supabase";
+import { createClient } from "@supabase/supabase-js";
 
-const PING_INTERVAL_DAYS = 5;
+export const dynamic = "force-dynamic";
+
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
+const supabaseServiceKey = process.env.NEXT_PUBLIC_SUPABASE_SECRET_KEY!;
 
 export async function GET() {
-  try {
-    // Check when we last pinged
-    const { data: pingData, error: pingError } = await supabase
-      .from("health_pings")
-      .select("last_ping")
-      .eq("id", 1)
-      .single();
+  const supabase = createClient(supabaseUrl, supabaseServiceKey);
+  const now = new Date().toISOString();
 
-    if (pingError) {
-      console.error("Error reading health_pings:", pingError);
-    }
+  const { error: writeError } = await supabase
+    .from("health_pings")
+    .upsert({ id: 1, last_ping: now }, { onConflict: "id" });
 
-    let didWrite = false;
-
-    // Write a ping if it's been more than 5 days (or no data exists)
-    if (pingData) {
-      const lastPing = new Date(pingData.last_ping);
-      const now = new Date();
-      const daysSinceLastPing = (now.getTime() - lastPing.getTime()) / (1000 * 60 * 60 * 24);
-
-      if (daysSinceLastPing >= PING_INTERVAL_DAYS) {
-        const { error: updateError } = await supabase
-          .from("health_pings")
-          .update({ last_ping: now.toISOString() })
-          .eq("id", 1);
-
-        if (updateError) {
-          console.error("Error updating health_pings:", updateError);
-        } else {
-          didWrite = true;
-        }
-      }
-    }
-
-    // Also do a read to verify general connectivity
-    const { count } = await supabase
-      .from("cofounder_applications")
-      .select("*", { count: "exact", head: true });
-
-    return NextResponse.json({
-      status: "ok",
-      timestamp: new Date().toISOString(),
-      db: "connected",
-      applications_count: count ?? 0,
-      last_write_ping: pingData?.last_ping ?? null,
-      did_write: didWrite,
-    });
-  } catch (error) {
-    console.error("Health check error:", error);
+  if (writeError) {
+    console.error("Health ping write failed:", writeError);
     return NextResponse.json(
-      { status: "error", timestamp: new Date().toISOString() },
-      { status: 500 }
+      { status: "error", timestamp: now, error: writeError.message },
+      {
+        status: 500,
+        headers: { "Cache-Control": "no-store" },
+      }
     );
   }
+
+  return NextResponse.json(
+    { status: "ok", timestamp: now, did_write: true },
+    {
+      status: 200,
+      headers: { "Cache-Control": "no-store" },
+    }
+  );
 }
