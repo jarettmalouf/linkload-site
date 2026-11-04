@@ -188,10 +188,11 @@ export function MachineInfo({ app, narrow = false }: Pick<ScreenProps, "app"> & 
   const m = app.machine;
   const lit = leds(m);
   return (
-    <div className="flex flex-col gap-5">
-      <dl className={`m-0 grid ${narrow ? "grid-cols-[92px_1fr] gap-x-3 text-[12px]" : "grid-cols-[120px_1fr] gap-x-4 text-[13px]"} gap-y-1.5 font-mono leading-snug`}>
+    <div className={`flex flex-col ${narrow ? "gap-3" : "gap-5"}`}>
+      {/* Narrow (phones): each place's name above its status. */}
+      <dl className={`m-0 font-mono leading-snug ${narrow ? "flex flex-col gap-2 text-[12px]" : "grid grid-cols-[120px_1fr] gap-x-4 gap-y-1.5 text-[13px]"}`}>
         {PLACES.map(({ id, name }) => (
-          <div key={id} className="contents">
+          <div key={id} className={narrow ? "" : "contents"}>
             <dt className={id !== "drawer" && lit[id] ? "text-[var(--signal)]" : "text-[var(--steel)]"}>{name}</dt>
             <dd className="m-0 text-[var(--silver)]">{placeCaption(m, id)}</dd>
           </div>

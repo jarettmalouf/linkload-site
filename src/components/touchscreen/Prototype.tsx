@@ -13,19 +13,20 @@ const SCREEN = { width: CANVAS.width + 2 * BEZEL, height: CANVAS.height + 2 * BE
 const MACHINE_H = MACHINE_VIEW.imageHeight + 150;
 
 /**
- * Phones: the machine (with its mirrored mini screen) takes the left third,
- * and the screen you use takes the rest, each scaled on its own.
+ * Phones: the top third holds the machine (with its mirrored mini screen)
+ * beside the status list; the bottom two thirds hold the screen you use, as
+ * wide as the phone allows.
  */
 const MOBILE_MAX_WIDTH = 768;
 const MOBILE_GAP = 12;
-/** Room kept under the phone screen for the status list. */
-const MOBILE_INFO_H = 150;
+/** The machine takes at most this share of the top row's width; the status list gets the rest. */
+const MOBILE_MACHINE_SHARE = 0.48;
 
 interface Stage {
   scale: number;
   stacked: boolean;
-  /** Phone layout: separate scales for the machine and the screen. */
-  mobile: { machine: number; screen: number } | null;
+  /** Phone layout: separate scales for the machine and the screen, and the full width. */
+  mobile: { machine: number; screen: number; width: number } | null;
 }
 
 /**
@@ -40,16 +41,10 @@ function useStage() {
       const vw = window.innerWidth - 32;
       const vh = window.innerHeight - 32;
       if (window.innerWidth < MOBILE_MAX_WIDTH) {
-        const left = (vw - MOBILE_GAP) / 3;
-        const right = vw - MOBILE_GAP - left;
-        setStage({
-          scale: 1,
-          stacked: false,
-          mobile: {
-            machine: Math.min(1, left / MACHINE_VIEW.width, vh / MACHINE_VIEW.imageHeight),
-            screen: Math.min(1, right / SCREEN.width, (vh - MOBILE_INFO_H) / SCREEN.height),
-          },
-        });
+        const screen = Math.min(1, vw / SCREEN.width, ((vh - MOBILE_GAP) * 2) / 3 / SCREEN.height);
+        const top = vh - MOBILE_GAP - SCREEN.height * screen;
+        const machine = Math.min(1, top / MACHINE_VIEW.imageHeight, (vw * MOBILE_MACHINE_SHARE) / MACHINE_VIEW.width);
+        setStage({ scale: 1, stacked: false, mobile: { machine, screen, width: vw } });
         return;
       }
       const row = { w: MACHINE_VIEW.width + GAP + SCREEN.width, h: Math.max(SCREEN.height, MACHINE_H) };
@@ -100,13 +95,15 @@ export function Prototype({
       </div>
     );
     return (
-      <div className="flex items-center" style={{ gap: MOBILE_GAP }}>
-        {fit(MACHINE_VIEW.width, MACHINE_VIEW.imageHeight, mobile.machine, <MachineView app={app} dispatch={dispatch} compact />)}
-        {/* The status list sits under the screen, at a readable size rather than scaled with the drawing. */}
-        <div className="flex flex-col gap-4" style={{ width: SCREEN.width * mobile.screen }}>
-          {fit(SCREEN.width, SCREEN.height, mobile.screen, <TouchScreen app={app} dispatch={dispatch} />)}
-          <MachineInfo app={app} narrow />
+      <div className="flex flex-col" style={{ gap: MOBILE_GAP, width: mobile.width }}>
+        <div className="flex items-center" style={{ gap: MOBILE_GAP }}>
+          {fit(MACHINE_VIEW.width, MACHINE_VIEW.imageHeight, mobile.machine, <MachineView app={app} dispatch={dispatch} compact />)}
+          {/* Readable size, not scaled with the drawing. */}
+          <div className="min-w-0 grow">
+            <MachineInfo app={app} narrow />
+          </div>
         </div>
+        <div className="flex justify-center">{fit(SCREEN.width, SCREEN.height, mobile.screen, <TouchScreen app={app} dispatch={dispatch} />)}</div>
       </div>
     );
   }
