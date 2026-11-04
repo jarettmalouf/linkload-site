@@ -4,7 +4,7 @@ import { useEffect, useReducer, useState } from "react";
 import { createApp, step } from "@/touchscreen/app";
 import { SCENES, type SceneName } from "@/touchscreen/scenes";
 import type { NotebookBits } from "@/touchscreen/types";
-import { MACHINE_VIEW, MachineView } from "./MachineView";
+import { MACHINE_VIEW, MachineInfo, MachineView } from "./MachineView";
 import { CANVAS, TouchScreen } from "./TouchScreen";
 
 const BEZEL = 18;
@@ -18,6 +18,8 @@ const MACHINE_H = MACHINE_VIEW.imageHeight + 150;
  */
 const MOBILE_MAX_WIDTH = 768;
 const MOBILE_GAP = 12;
+/** Room kept under the phone screen for the status list. */
+const MOBILE_INFO_H = 150;
 
 interface Stage {
   scale: number;
@@ -45,7 +47,7 @@ function useStage() {
           stacked: false,
           mobile: {
             machine: Math.min(1, left / MACHINE_VIEW.width, vh / MACHINE_VIEW.imageHeight),
-            screen: Math.min(1, right / SCREEN.width, vh / SCREEN.height),
+            screen: Math.min(1, right / SCREEN.width, (vh - MOBILE_INFO_H) / SCREEN.height),
           },
         });
         return;
@@ -99,9 +101,12 @@ export function Prototype({
     );
     return (
       <div className="flex items-center" style={{ gap: MOBILE_GAP }}>
-        {/* Too small to read there, so the captions are left off. */}
         {fit(MACHINE_VIEW.width, MACHINE_VIEW.imageHeight, mobile.machine, <MachineView app={app} dispatch={dispatch} compact />)}
-        {fit(SCREEN.width, SCREEN.height, mobile.screen, <TouchScreen app={app} dispatch={dispatch} />)}
+        {/* The status list sits under the screen, at a readable size rather than scaled with the drawing. */}
+        <div className="flex flex-col gap-4" style={{ width: SCREEN.width * mobile.screen }}>
+          {fit(SCREEN.width, SCREEN.height, mobile.screen, <TouchScreen app={app} dispatch={dispatch} />)}
+          <MachineInfo app={app} narrow />
+        </div>
       </div>
     );
   }

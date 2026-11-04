@@ -178,8 +178,18 @@ export function MachineView({ app, dispatch, compact = false }: ScreenProps & { 
         <MiniScreen app={app} />
       </div>
 
-      {!compact && (
-      <dl className="m-0 grid grid-cols-[120px_1fr] gap-x-4 gap-y-1.5 font-mono text-[13px] leading-snug">
+      {!compact && <MachineInfo app={app} />}
+    </div>
+  );
+}
+
+/** What's in each place, and how to change it. On phones it sits under the screen instead. */
+export function MachineInfo({ app, narrow = false }: Pick<ScreenProps, "app"> & { narrow?: boolean }) {
+  const m = app.machine;
+  const lit = leds(m);
+  return (
+    <div className="flex flex-col gap-5">
+      <dl className={`m-0 grid ${narrow ? "grid-cols-[92px_1fr] gap-x-3 text-[12px]" : "grid-cols-[120px_1fr] gap-x-4 text-[13px]"} gap-y-1.5 font-mono leading-snug`}>
         {PLACES.map(({ id, name }) => (
           <div key={id} className="contents">
             <dt className={id !== "drawer" && lit[id] ? "text-[var(--signal)]" : "text-[var(--steel)]"}>{name}</dt>
@@ -187,8 +197,7 @@ export function MachineView({ app, dispatch, compact = false }: ScreenProps & { 
           </div>
         ))}
       </dl>
-      )}
-      {!compact && <div className="text-[13px] text-[var(--steel)]">Tap a drum or drawer to load or empty it.</div>}
+      <div className={`${narrow ? "text-[12px]" : "text-[13px]"} text-[var(--steel)]`}>Tap a drum or drawer to load or empty it.</div>
     </div>
   );
 }
