@@ -91,6 +91,9 @@ export const MOVE_SPEED = 24;
 /** The hang-dry window runs at up to 10× in the simulator: its 30 seconds take 3. */
 export const HANG_DRY_SPEED = 10;
 
+/** The finish screen's minute runs at up to 20× in the simulator, so it takes 3 seconds. */
+export const FINISH_SPEED = 20;
+
 /** The simulator slows while the hang-dry window is up (HANG_DRY_SPEED) and during a move (MOVE_SPEED). */
 export function effectiveSpeed(s: AppState, requested: number): number {
   const speed = Math.min(60, Math.max(1, requested));
@@ -221,7 +224,15 @@ export function appReduce(s: AppState, a: AppAction): AppState {
     case "TICK": {
       const speed = effectiveSpeed(s, a.speed);
       // The hang-dry countdown runs at the simulator's speed; finish screens stay in real time.
-      return { ...s, machine: tick(s.machine, { realSec: a.realSec, simMin: (a.realSec * speed) / 60, windowSec: a.realSec * speed }) };
+      return {
+        ...s,
+        machine: tick(s.machine, {
+          realSec: a.realSec,
+          simMin: (a.realSec * speed) / 60,
+          windowSec: a.realSec * speed,
+          finishSec: a.realSec * Math.min(a.speed, FINISH_SPEED),
+        }),
+      };
     }
 
     case "WELCOME":

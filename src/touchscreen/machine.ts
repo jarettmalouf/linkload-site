@@ -48,7 +48,7 @@ export const DEFAULT_CONFIG: MachineConfig = {
   offPeak: { start: 21 * 60, end: 6 * 60 },
   wakeup: 6 * 60,
   autoUnsureMarginMin: 5,
-  finishScreenSec: 8,
+  finishScreenSec: 60,
 };
 
 export function createMachine(opts: { now?: number; config?: Partial<MachineConfig> } = {}): MachineState {
@@ -368,8 +368,11 @@ function advance(s: MachineState, dt: number) {
 /** Advance both clocks. Steps exactly to each transition so timestamps stay exact. */
 export function tick(
   state: MachineState,
-  /** windowSec: how far the hang-dry countdown moves; the simulator speeds it up (defaults to realSec). */
-  elapsed: { simMin?: number; realSec?: number; windowSec?: number },
+  /**
+   * windowSec / finishSec: how far the hang-dry and finish-screen countdowns
+   * move; the simulator speeds them up (both default to realSec).
+   */
+  elapsed: { simMin?: number; realSec?: number; windowSec?: number; finishSec?: number },
 ): MachineState {
   const s = clone(state);
   const realSec = elapsed.realSec ?? 0;
@@ -383,7 +386,7 @@ export function tick(
     // The finish screen returns to the main page on its own; it waits out a transfer.
     const head = s.finished[0];
     if (head && !s.transfer) {
-      head.secondsLeft -= realSec;
+      head.secondsLeft -= elapsed.finishSec ?? realSec;
       if (head.secondsLeft <= 0) s.finished.shift();
     }
     s.ui.idleSec += realSec;

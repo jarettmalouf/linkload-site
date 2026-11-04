@@ -54,7 +54,10 @@ describe("Finish screen", () => {
     s = step(s, { type: "TICK", realSec: 15.5, speed: 60 }); // 15-minute dry
     expect(overlayScreen(s.machine)).toBe("finish");
     expect(finishView(s.machine)).toEqual({ title: "Your Warm Towels are done", sub: "You can find them in the dryer." });
-    s = step(s, { type: "TICK", realSec: 8, speed: 1 });
+    // A minute on the real machine; 3 seconds in the simulator at 60x.
+    s = step(s, { type: "TICK", realSec: 2.9, speed: 60 });
+    expect(overlayScreen(s.machine)).toBe("finish");
+    s = step(s, { type: "TICK", realSec: 0.2, speed: 60 });
     expect(overlayScreen(s.machine)).toBeNull();
   });
 
@@ -85,7 +88,7 @@ describe("Main page shows what's running", () => {
   it("lists what's waiting in the done drawer too", () => {
     let s = greeted("010");
     s = step(s, { type: "MACHINE", event: { type: "LOAD_PLACE", place: "drawer" } });
-    expect(activeStatuses(s.machine)).toContainEqual({ text: "Done drawer · Load", active: false });
+    expect(activeStatuses(s.machine)).toContainEqual({ text: "Done drawer · Load", active: true });
   });
 });
 

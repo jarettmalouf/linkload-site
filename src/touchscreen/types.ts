@@ -185,7 +185,7 @@ export interface MachineConfig {
   wakeup: number;
   /** Margin when Auto is unsure about the dry. */
   autoUnsureMarginMin: number;
-  /** Real seconds the finish screen stays up before returning to the main page. */
+  /** Seconds the finish screen stays up before returning to the main page (a minute; 3 s in the simulator). */
   finishScreenSec: number;
 }
 

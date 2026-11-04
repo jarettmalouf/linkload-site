@@ -193,7 +193,7 @@ export function finishView(m: MachineState): { title: string; sub: string } | nu
 
 export interface StatusLine {
   text: string;
-  /** Running right now (purple dot). */
+  /** Running right now, or done and waiting to be taken out: a purple dot. */
   active: boolean;
 }
 
@@ -201,9 +201,9 @@ export interface StatusLine {
 export function activeStatuses(m: MachineState): StatusLine[] {
   const lines: StatusLine[] = [washerTile(m), dryerTile(m)]
     .filter((t): t is Tile => !!t && t.status !== "Not set up" && t.status !== "Queued")
-    .map((t) => ({ text: [t.status, t.type, t.numeric ? t.big : ""].filter(Boolean).join(" · "), active: t.active }));
+    .map((t) => ({ text: [t.status, t.type, t.numeric ? t.big : ""].filter(Boolean).join(" · "), active: t.active || t.big === "Done" }));
   if (m.transfer) lines.unshift({ text: movingText(m.transfer), active: true });
-  if (m.drawer) lines.push({ text: `Done drawer · ${label(m.drawer.settings)}`, active: false });
+  if (m.drawer) lines.push({ text: `Done drawer · ${label(m.drawer.settings)}`, active: true });
   return lines;
 }
 

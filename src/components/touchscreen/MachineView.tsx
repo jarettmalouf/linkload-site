@@ -50,23 +50,19 @@ const SCREEN_H = CANVAS.height + 2 * BEZEL;
 const MINI_SCALE = PANEL.width / SCREEN_W;
 const noop = () => {};
 
-/**
- * The display on the machine. Beside the full-size screen it's a copy you
- * can only look at; on its own (mobile) it's the screen you use.
- */
-function MiniScreen({ app, dispatch }: Pick<ScreenProps, "app"> & { dispatch?: ScreenProps["dispatch"] }) {
+/** A copy of the main display on the machine. Look, don't touch. */
+function MiniScreen({ app }: Pick<ScreenProps, "app">) {
   const h = SCREEN_H * MINI_SCALE;
-  const live = !!dispatch;
   return (
     <div
-      aria-hidden={live ? undefined : true}
+      aria-hidden
       // inert: nothing inside can be focused or clicked (set directly; React 18 has no inert prop).
-      ref={(el) => (live ? el?.removeAttribute("inert") : el?.setAttribute("inert", ""))}
-      className={`absolute overflow-hidden ${live ? "" : "pointer-events-none"}`}
+      ref={(el) => el?.setAttribute("inert", "")}
+      className="pointer-events-none absolute overflow-hidden"
       style={{ left: PANEL.right - PANEL.width, top: PANEL.centerY - h / 2, width: PANEL.width, height: h }}
     >
       <div style={{ width: SCREEN_W, height: SCREEN_H, transform: `scale(${MINI_SCALE})`, transformOrigin: "top left" }}>
-        <TouchScreen app={app} dispatch={dispatch ?? noop} />
+        <TouchScreen app={app} dispatch={noop} />
       </div>
     </div>
   );
@@ -93,7 +89,7 @@ function moving(m: ScreenProps["app"]["machine"]) {
   return { x: from.x + (to.x - from.x) * e, y: from.y + (to.y - from.y) * e };
 }
 
-export function MachineView({ app, dispatch, screenLive = false }: ScreenProps & { screenLive?: boolean }) {
+export function MachineView({ app, dispatch, compact = false }: ScreenProps & { compact?: boolean }) {
   const m = app.machine;
   const lit = leds(m);
   const full: Record<PlaceId, boolean> = {
@@ -179,9 +175,10 @@ export function MachineView({ app, dispatch, screenLive = false }: ScreenProps &
             </g>
           )}
         </svg>
-        <MiniScreen app={app} dispatch={screenLive ? dispatch : undefined} />
+        <MiniScreen app={app} />
       </div>
 
+      {!compact && (
       <dl className="m-0 grid grid-cols-[120px_1fr] gap-x-4 gap-y-1.5 font-mono text-[13px] leading-snug">
         {PLACES.map(({ id, name }) => (
           <div key={id} className="contents">
@@ -190,7 +187,8 @@ export function MachineView({ app, dispatch, screenLive = false }: ScreenProps &
           </div>
         ))}
       </dl>
-      <div className="text-[13px] text-[var(--steel)]">Tap a drum or drawer to load or empty it.</div>
+      )}
+      {!compact && <div className="text-[13px] text-[var(--steel)]">Tap a drum or drawer to load or empty it.</div>}
     </div>
   );
 }
