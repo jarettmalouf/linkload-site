@@ -1,0 +1,200 @@
+/*
+ * Touchscreen prototype. Site tokens (globals.css) mapped onto the mockup's
+ * roles; the mockups were approximations of these.
+ */
+.ts {
+  --ts-bg: var(--void);
+  --ts-surface: var(--graphite);
+  --ts-line: var(--charcoal);
+  --ts-text: var(--paper);
+  --ts-muted: var(--steel);
+  --ts-dim: color-mix(in srgb, var(--steel) 58%, var(--void));
+  --ts-sleep: var(--silver);
+  --ts-accent: var(--signal);
+  --ts-on-accent: var(--void);
+  /* Illustration colors for the wash, dry and transfer animations only. */
+  --ts-bubble: color-mix(in srgb, var(--silver) 70%, transparent);
+  --ts-heat: #e3a77a;
+  --ts-leaf-1: #d9823b;
+  --ts-leaf-2: #c2602f;
+  --ts-leaf-3: #e0a144;
+  --ts-water: #9fc2e2;
+
+  background: var(--ts-bg);
+  color: var(--ts-text);
+  font-family: var(--font-geist-sans), system-ui, sans-serif;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.ts button {
+  font-family: inherit;
+  cursor: pointer;
+}
+
+.ts button:focus-visible,
+.ts [role="switch"]:focus-visible,
+.ts input:focus-visible,
+.ts [role="listbox"]:focus-visible {
+  outline: 3px solid var(--ts-accent);
+  outline-offset: 4px;
+}
+
+.ts .tabular {
+  font-variant-numeric: tabular-nums;
+}
+
+/* ── Slider ─────────────────────────────────────────────────────────────── */
+.ts input[type="range"] {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 100%;
+  height: 40px;
+  background: transparent;
+  cursor: pointer;
+}
+.ts input[type="range"]::-webkit-slider-runnable-track {
+  height: 6px;
+  border-radius: 3px;
+  background: var(--ts-line);
+}
+.ts input[type="range"]::-moz-range-track {
+  height: 6px;
+  border-radius: 3px;
+  background: var(--ts-line);
+}
+.ts input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 32px;
+  height: 32px;
+  margin-top: -13px;
+  border: 0;
+  border-radius: 50%;
+  background: var(--ts-accent);
+}
+.ts input[type="range"]::-moz-range-thumb {
+  width: 32px;
+  height: 32px;
+  border: 0;
+  border-radius: 50%;
+  background: var(--ts-accent);
+}
+
+/* ── The page never moves: drags on sliders and pickers stay on the screen ─ */
+html:has(.ts-page),
+body:has(.ts-page) {
+  height: 100%;
+  overflow: hidden;
+  overscroll-behavior: none;
+}
+.ts-page {
+  position: fixed;
+  inset: 0;
+  overflow: hidden;
+  overscroll-behavior: none;
+  touch-action: none;
+}
+
+/* ── Bezel: the bounds of the physical screen ───────────────────────────── */
+.ts-bezel {
+  padding: 18px;
+  border-radius: 46px;
+  background: var(--graphite);
+  box-shadow: inset 0 0 0 1px var(--charcoal), 0 0 0 1px color-mix(in srgb, var(--steel) 25%, transparent);
+}
+
+/* ── Washing and drying: clothes drift around the whole tile ─────────── */
+@keyframes ts-drift-1 {
+  0%, 100% { transform: translate(120px, 110px) rotate(-10deg); }
+  25% { transform: translate(330px, 270px) rotate(60deg); }
+  50% { transform: translate(590px, 130px) rotate(150deg); }
+  75% { transform: translate(420px, 300px) rotate(230deg); }
+}
+@keyframes ts-drift-2 {
+  0%, 100% { transform: translate(610px, 280px) rotate(0deg); }
+  25% { transform: translate(430px, 90px) rotate(-80deg); }
+  50% { transform: translate(170px, 260px) rotate(-170deg); }
+  75% { transform: translate(300px, 110px) rotate(-260deg); }
+}
+@keyframes ts-drift-3 {
+  0%, 100% { transform: translate(360px, 70px) rotate(20deg); }
+  33% { transform: translate(650px, 210px) rotate(120deg); }
+  66% { transform: translate(90px, 300px) rotate(240deg); }
+}
+.ts .ts-drift-1, .ts .ts-drift-2, .ts .ts-drift-3 {
+  animation-timing-function: ease-in-out;
+  animation-iteration-count: infinite;
+}
+.ts .ts-drift-1 { animation-name: ts-drift-1; transform: translate(120px, 110px); }
+.ts .ts-drift-2 { animation-name: ts-drift-2; transform: translate(610px, 280px); }
+.ts .ts-drift-3 { animation-name: ts-drift-3; transform: translate(360px, 70px); }
+
+/* Bubbles rise the full height of the tile, wobbling. */
+@keyframes ts-rise {
+  0% { transform: translate(0, 0); opacity: 0; }
+  12% { opacity: 0.9; }
+  50% { transform: translate(var(--sway), -210px); }
+  85% { opacity: 0.6; }
+  100% { transform: translate(calc(var(--sway) * -1), -430px); opacity: 0; }
+}
+.ts .ts-rise { animation: ts-rise 7s ease-in-out infinite; opacity: 0; }
+
+/* Heat wafts up across the tile. */
+@keyframes ts-waft {
+  0% { transform: translateY(30px); opacity: 0; }
+  35% { opacity: 0.6; }
+  100% { transform: translateY(-270px); opacity: 0; }
+}
+.ts .ts-waft { animation: ts-waft 4s ease-in-out infinite; opacity: 0; }
+
+/* ── Moves: autumn leaves drift from the dryer into the done drawer ──── */
+@keyframes ts-leaf {
+  0% { transform: translate(0, -150px) rotate(0deg); opacity: 0; }
+  12% { opacity: 1; }
+  50% { transform: translate(var(--dx), 0) rotate(170deg); }
+  88% { opacity: 1; }
+  100% { transform: translate(calc(var(--dx) * -0.4), 150px) rotate(330deg); opacity: 0; }
+}
+.ts .ts-leaf {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: ts-leaf 3s cubic-bezier(0.45, 0, 0.55, 1) infinite;
+  opacity: 0;
+}
+
+/* ── Moves: clothes fall (wet ones drip) ────────────────────────────────── */
+@keyframes ts-fall {
+  0% { transform: translate(0, -150px) rotate(-8deg); opacity: 0; }
+  12% { opacity: 1; }
+  85% { opacity: 1; }
+  100% { transform: translate(var(--dx), 150px) rotate(30deg); opacity: 0; }
+}
+.ts .ts-fall {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: ts-fall 2.4s cubic-bezier(0.5, 0, 0.9, 0.6) infinite;
+  opacity: 0;
+}
+@keyframes ts-drip {
+  0% { transform: translateY(0); opacity: 0; }
+  20% { opacity: 1; }
+  100% { transform: translateY(46px); opacity: 0; }
+}
+.ts .ts-drip { animation: ts-drip 0.8s ease-in infinite; opacity: 0; }
+
+/* ── Machine view: a running drum turns ─────────────────────────────────── */
+@keyframes ts-tumble { to { transform: rotate(360deg); } }
+.mv-spin {
+  transform-box: view-box;
+  animation-name: ts-tumble;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mv-spin { animation: none; }
+  .ts .ts-drift-1, .ts .ts-drift-2, .ts .ts-drift-3 { animation: none; }
+  .ts .ts-rise, .ts .ts-waft, .ts .ts-drip { animation: none; opacity: 0.5; }
+  .ts .ts-leaf, .ts .ts-fall { animation: none; opacity: 0.8; transform: none; }
+  .ts * { transition: none !important; }
+}
