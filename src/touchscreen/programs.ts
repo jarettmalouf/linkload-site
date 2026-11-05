@@ -4,6 +4,7 @@
  * them afterwards.
  */
 import type {
+  CustomPreset,
   DryProgramId,
   LoadSettings,
   MachineConfig,
@@ -70,9 +71,26 @@ const clone = (p: Preset): LoadSettings => ({
 export const washPreset = (id: WashProgramId): LoadSettings => clone(WASH_PRESETS[id]);
 export const dryPreset = (id: DryProgramId): LoadSettings => clone(DRY_PRESETS[id]);
 
-/** The untouched preset for a program, for the default tick on each slider. */
-export const presetOf = (program: LoadSettings["program"], kind: "wash" | "dry"): LoadSettings =>
-  kind === "dry" ? dryPreset(program as DryProgramId) : washPreset(program as WashProgramId);
+export const isCustom = (program: LoadSettings["program"]): program is CustomPreset["id"] => program.startsWith("custom-");
+
+/**
+ * The untouched settings for a program (built-in or saved on this machine),
+ * for picking it and for the default tick on each slider.
+ */
+export function presetOf(program: LoadSettings["program"], kind: "wash" | "dry", custom: CustomPreset[] = []): LoadSettings {
+  if (isCustom(program)) {
+    const p = custom.find((c) => c.id === program);
+    if (p) return structuredClone(p.settings);
+    return kind === "dry" ? dryPreset("normal") : washPreset("normal");
+  }
+  return kind === "dry" ? dryPreset(program as DryProgramId) : washPreset(program as WashProgramId);
+}
+
+/** The picker's name for a program. */
+export function programLabel(program: LoadSettings["program"], kind: "wash" | "dry", custom: CustomPreset[] = []): string {
+  if (isCustom(program)) return custom.find((c) => c.id === program)?.name ?? "Preset";
+  return kind === "dry" ? DRY_PRESETS[program as DryProgramId].label : WASH_PRESETS[program as WashProgramId].label;
+}
 
 /** Spec: hot water or bleach counts as harsh. */
 export const isHarsh = (s: LoadSettings | null): boolean =>

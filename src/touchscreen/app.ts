@@ -5,12 +5,12 @@
  * so the components only render state and dispatch actions.
  */
 import { createMachine, holdRealTime, previewRun, reduce, tick, type RunPreview } from "./machine";
-import { DRY_PICKER_ORDER, WASH_PICKER_ORDER, presetOf } from "./programs";
+import { DRY_PICKER_ORDER, WASH_PICKER_ORDER, isCustom, presetOf } from "./programs";
 import { clockLabel, nextOccurrence, timeOfDay } from "./scheduler";
 import { baseScreen, overlayScreen, pickerTarget, type SetupIntent } from "./screens";
 import type { LoadPlan, LoadSettings, MachineEvent, MachineState, NotebookBits, ProgramId, StartRunInput } from "./types";
 
-export type NavScreen = "setup" | "advanced" | "done-by" | "wash-detail" | "dry-detail";
+export type NavScreen = "setup" | "advanced" | "name-preset" | "done-by" | "wash-detail" | "dry-detail";
 
 export interface DraftLoad {
   target: { place: "washer" | "queue" | "dryer"; kind: "wash" | "dry" };
@@ -46,6 +46,8 @@ export interface AppState {
   info: "eco" | "done-by" | null;
   /** Past the welcome screen since the screen last woke. */
   welcomed: boolean;
+  /** The name being typed on the preset screen. */
+  presetName: string;
 }
 
 export type AppAction =
@@ -65,7 +67,15 @@ export type AppAction =
   | { type: "TIMING_TIME"; time: number }
   | { type: "SET_DONE_BY" }
   | { type: "INFO"; topic: AppState["info"] }
-  | { type: "START" };
+  | { type: "START" }
+  | { type: "OPEN_NAME_PRESET" }
+  | { type: "PRESET_KEY"; key: string }
+  | { type: "PRESET_BACKSPACE" }
+  | { type: "SAVE_PRESET" }
+  | { type: "DELETE_PRESET" };
+
+/** Longest preset name, characters. */
+export const PRESET_NAME_MAX = 18;
 
 /** Done By picker step, minutes. */
 export const TIME_STEP = 15;
@@ -79,7 +89,7 @@ export function createApp(bits: NotebookBits = "011", now?: number, opts: { idle
     type: "SET_START_MODE",
     bits,
   });
-  return { machine, nav: [], draft: null, info: null, welcomed: false };
+  return { machine, nav: [], draft: null, info: null, welcomed: false, presetName: "" };
 }
 
 /**
@@ -103,8 +113,9 @@ export function effectiveSpeed(s: AppState, requested: number): number {
 
 export const pickerOptions = (s: AppState, kind: "wash" | "dry"): ProgramId[] => {
   const order: ProgramId[] = kind === "dry" ? DRY_PICKER_ORDER : WASH_PICKER_ORDER;
-  // Auto can't be used with video off.
-  return s.machine.sim.videoEnabled ? order : order.filter((p) => p !== "auto");
+  // Auto can't be used with video off. Presets saved on this machine come last.
+  const builtIn = s.machine.sim.videoEnabled ? order : order.filter((p) => p !== "auto");
+  return [...builtIn, ...s.machine.presets.map((p) => p.id)];
 };
 
 const planFor = (intent: SetupIntent): LoadPlan =>
@@ -251,7 +262,7 @@ export function appReduce(s: AppState, a: AppAction): AppState {
 
     case "PICK":
       return withActive(s, (l) => {
-        const settings = presetOf(a.program, l.target.kind);
+        const settings = presetOf(a.program, l.target.kind, s.machine.presets);
         settings.wash.hangDryNet = l.settings.wash.hangDryNet;
         return { ...l, program: a.program, settings };
       });
@@ -316,6 +327,55 @@ export function appReduce(s: AppState, a: AppAction): AppState {
 
     case "INFO":
       return { ...s, info: a.topic };
+
+    case "OPEN_NAME_PRESET": {
+      if (!s.draft) return s;
+      const load = activeLoad(s.draft);
+      // Editing a saved preset starts from its name; a new one starts blank.
+      const presetName = isCustom(load.program) ? load.settings.label : "";
+      return { ...s, nav: [...s.nav, "name-preset"], presetName, machine: touch(s.machine) };
+    }
+
+    case "PRESET_KEY": {
+      if (s.presetName.length >= PRESET_NAME_MAX) return s;
+      // The first letter is a capital, like a name.
+      const key = s.presetName.trim() === "" ? a.key.toUpperCase() : a.key;
+      if (key === " " && (s.presetName === "" || s.presetName.endsWith(" "))) return s;
+      return { ...s, presetName: s.presetName + key, machine: touch(s.machine) };
+    }
+
+    case "PRESET_BACKSPACE":
+      return { ...s, presetName: s.presetName.slice(0, -1), machine: touch(s.machine) };
+
+    case "SAVE_PRESET": {
+      const name = s.presetName.trim();
+      if (!s.draft || !name) return s;
+      const load = activeLoad(s.draft);
+      const machine = reduce(s.machine, { type: "SAVE_PRESET", name, settings: load.settings });
+      const preset = machine.presets.find((p) => p.name.toLowerCase() === name.toLowerCase())!;
+      // The load now runs on the new preset, keeping its own hang-dry choice.
+      const settings = presetOf(preset.id, load.target.kind, machine.presets);
+      settings.wash.hangDryNet = load.settings.wash.hangDryNet;
+      const loads = s.draft.loads.map((l, i) => (i === s.draft!.active ? { ...l, program: preset.id, settings } : l));
+      const nav = s.nav.filter((n) => n !== "name-preset" && n !== "advanced");
+      return { ...s, machine, draft: { ...s.draft, loads }, nav, presetName: "" };
+    }
+
+    case "DELETE_PRESET": {
+      if (!s.draft) return s;
+      const load = activeLoad(s.draft);
+      if (!isCustom(load.program)) return s;
+      const machine = reduce(s.machine, { type: "DELETE_PRESET", id: load.program });
+      // Any load using it goes back to the default program.
+      const loads = s.draft.loads.map((l) => {
+        if (l.program !== load.program) return l;
+        const fallback = newDraftLoad({ ...s, machine }, l.target);
+        fallback.settings.wash.hangDryNet = l.settings.wash.hangDryNet;
+        return fallback;
+      });
+      const nav = s.nav.filter((n) => n !== "name-preset" && n !== "advanced");
+      return { ...s, machine, draft: { ...s.draft, loads }, nav, presetName: "" };
+    }
 
     case "START": {
       const input = draftInput(s);

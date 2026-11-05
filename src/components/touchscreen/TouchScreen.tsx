@@ -8,6 +8,7 @@ import { DoneBy } from "./screens/DoneBy";
 import { Home, Ready, Welcome } from "./screens/Home";
 import { Progress } from "./screens/Progress";
 import { ClearanceModal, Failed, Finish, HangDry, ProTip, Sleep, Transfer } from "./screens/Prompts";
+import { NamePreset } from "./screens/NamePreset";
 import { Setup } from "./screens/Setup";
 import type { ScreenProps } from "./types";
 
@@ -27,6 +28,7 @@ function Current(props: ScreenProps) {
   switch (app.nav.at(-1)) {
     case "setup": return <Setup {...props} />;
     case "advanced": return <Advanced {...props} />;
+    case "name-preset": return <NamePreset {...props} />;
     case "done-by": return <DoneBy {...props} />;
     case "wash-detail": return <WashDetail {...props} />;
     case "dry-detail": return <DryDetail {...props} />;

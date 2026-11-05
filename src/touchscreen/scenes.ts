@@ -99,6 +99,15 @@ export const SCENES = {
     const s = advance(run(tip, m({ type: "PRO_TIP_NOTIFY" })), 47.01);
     return advance(run(s, m({ type: "HANG_DRY_SKIP" })), 1);
   },
+  "name-preset": () =>
+    run(
+      greeted("010"),
+      { type: "OPEN_SETUP", intent: "full-run" },
+      { type: "PICK", program: "normal" },
+      { type: "OPEN", screen: "advanced" },
+      { type: "OPEN_NAME_PRESET" },
+      ..."baby clothes".split("").map((key): AppAction => ({ type: "PRESET_KEY", key })),
+    ),
   "dry-only-start": () => start(greeted("100"), [{ place: "dryer", settings: dryPreset("warm-towels"), plan: "dry-only" }]),
 } satisfies Record<string, () => AppState>;
 

@@ -3,7 +3,7 @@
  */
 import { describe, expect, it } from "vitest";
 import { canQueueInSetup, createApp, draftInput, draftPreview, setupNote, showWelcome, step, timingStatus, type AppState } from "../app";
-import { leds } from "../machine";
+import { leds, reduce } from "../machine";
 import { SCENES } from "../scenes";
 import { timeOfDay } from "../scheduler";
 import { overlayScreen } from "../screens";
@@ -114,14 +114,13 @@ describe("What has to be emptied", () => {
     expect(setupNote(s, draftPreview(s))).toBe("Empty the dryer and done drawer before these loads can start");
   });
 
-  it("after Start, a modal stays until both are empty, then the loads start on their own", () => {
+  it("after Start, a modal stays until the first load can go; the queued one is asked about when it's held", () => {
     let s = step(crowded(), { type: "OPEN_SETUP", intent: "full-run" });
     s = step(s, { type: "QUEUE_IN_SETUP" });
     s = step(s, { type: "START" });
     expect(clearanceView(s.machine)?.title).toBe("Empty the dryer and done drawer to start");
+    // With the dryer empty the first load can start; the queued load's turn comes later.
     s = step(s, { type: "MACHINE", event: { type: "EMPTY_PLACE", place: "dryer" } });
-    expect(clearanceView(s.machine)?.title).toBe("Empty the done drawer to start");
-    s = step(s, { type: "MACHINE", event: { type: "EMPTY_PLACE", place: "drawer" } });
     expect(clearanceView(s.machine)).toBeNull();
     expect(s.machine.washer?.status).toBe("washing");
   });
@@ -334,5 +333,91 @@ describe("Clear the net", () => {
     expect(washerTile(s.machine)).toMatchObject({ big: "Clear the net", action: "clear-net" });
     s = step(s, { type: "MACHINE", event: { type: "NET_CLEARED" } });
     expect(washerTile(s.machine)?.action).toBeUndefined();
+  });
+});
+
+describe("Emptying is only asked for once a load is actually held", () => {
+  it("towels in the dryer, Bedding washing, Delicates queued: no warning until Delicates is held, then the done drawer", async () => {
+    const { tick, nextLoadHeld } = await import("../machine");
+    // Dry Only first (Warm Towels), then Bedding in the washer with Delicates queued behind it.
+    let s = greeted("111");
+    s = step(s, { type: "PICK", program: "warm-towels" });
+    s = step(s, { type: "START" });
+    s = step(s, { type: "OPEN_SETUP", intent: "full-run" });
+    s = step(s, { type: "PICK", program: "bedding" });
+    s = step(s, { type: "QUEUE_IN_SETUP" });
+    s = step(s, { type: "PICK", program: "delicates" });
+    s = step(s, { type: "START" });
+    expect(s.machine.washer?.status).toBe("washing");
+    expect(clearanceView(s.machine)).toBeNull();
+
+    let firstAsk: { now: number; held: boolean; view: ReturnType<typeof clearanceView> } | null = null;
+    let m = s.machine;
+    for (let i = 0; i < 400 * 4 && !firstAsk; i++) {
+      m = tick(m, { simMin: 0.25, realSec: 1 });
+      const view = clearanceView(m);
+      if (view) firstAsk = { now: m.now, held: nextLoadHeld(m), view };
+    }
+    // The towels dropped into the done drawer on their own; Bedding dried; now Delicates is held.
+    expect(firstAsk?.held).toBe(true);
+    expect(m.drawer?.settings?.label).toBe("Warm Towels");
+    expect(m.dryer?.load.settings?.label).toBe("Bedding");
+    expect(firstAsk?.view?.title).toBe("Empty the done drawer to start");
+    // Emptying it lets Bedding drop down and Delicates go.
+    m = reduce(m, { type: "EMPTY_PLACE", place: "drawer" });
+    expect(clearanceView(m)).toBeNull();
+  });
+});
+
+describe("Presets", () => {
+  const setupNormal = () => {
+    let s = step(greeted("010"), { type: "OPEN_SETUP", intent: "full-run" });
+    s = step(s, { type: "PICK", program: "normal" });
+    return step(s, { type: "OPEN", screen: "advanced" });
+  };
+  const type = (s: AppState, text: string) =>
+    text.split("").reduce((acc, c) => step(acc, { type: "PRESET_KEY", key: c }), s);
+
+  it("saves the tuned settings under a name, picks it, and lists it in the picker", async () => {
+    const { pickerOptions } = await import("../app");
+    let s = setupNormal();
+    const st = s.draft!.loads[0].settings;
+    s = step(s, { type: "EDIT", settings: { ...st, wash: { ...st.wash, waterTemp: "cold", softenerCups: 0 } } });
+    s = step(s, { type: "OPEN_NAME_PRESET" });
+    s = type(s, "baby clothes");
+    expect(s.presetName).toBe("Baby clothes");
+    s = step(s, { type: "SAVE_PRESET" });
+    expect(s.nav).toEqual(["setup"]);
+    const load = s.draft!.loads[0];
+    expect(load.settings).toMatchObject({ label: "Baby clothes", auto: false, wash: { waterTemp: "cold", softenerCups: 0 } });
+    expect(pickerOptions(s, "wash").at(-1)).toBe(load.program);
+    expect(pickerOptions(s, "dry")).toContain(load.program);
+  });
+
+  it("the same name updates the preset; Delete removes it and the load goes back to the default", () => {
+    let s = setupNormal();
+    s = type(step(s, { type: "OPEN_NAME_PRESET" }), "jarett");
+    s = step(s, { type: "SAVE_PRESET" });
+    const id = s.draft!.loads[0].program;
+    s = step(s, { type: "OPEN", screen: "advanced" });
+    s = step(s, { type: "OPEN_NAME_PRESET" });
+    expect(s.presetName).toBe("Jarett");
+    s = step(s, { type: "SAVE_PRESET" });
+    expect(s.machine.presets.map((p) => p.id)).toEqual([id]);
+    s = step(s, { type: "OPEN", screen: "advanced" });
+    s = step(s, { type: "OPEN_NAME_PRESET" });
+    s = step(s, { type: "DELETE_PRESET" });
+    expect(s.machine.presets).toEqual([]);
+    expect(s.draft!.loads[0].program).toBe("auto");
+  });
+
+  it("survives a new starting mode and runs like any load", () => {
+    let s = setupNormal();
+    s = type(step(s, { type: "OPEN_NAME_PRESET" }), "towels");
+    s = step(s, { type: "SAVE_PRESET" });
+    s = step(s, { type: "START" });
+    expect(s.machine.washer?.load.settings?.label).toBe("Towels");
+    s = step(s, { type: "MACHINE", event: { type: "SET_START_MODE", bits: "010" } });
+    expect(s.machine.presets.map((p) => p.name)).toEqual(["Towels"]);
   });
 });

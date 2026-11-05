@@ -8,6 +8,7 @@ import { MACHINE_VIEW, MachineInfo, MachineView } from "./MachineView";
 import { CANVAS, TouchScreen } from "./TouchScreen";
 
 const BEZEL = 18;
+const PRESETS_KEY = "linkload-touchscreen-presets";
 const GAP = 56;
 const SCREEN = { width: CANVAS.width + 2 * BEZEL, height: CANVAS.height + 2 * BEZEL };
 const MACHINE_H = MACHINE_VIEW.imageHeight + 150;
@@ -75,6 +76,27 @@ export function Prototype({
   const [app, dispatch] = useReducer(step, null, () => (scene ? SCENES[scene]() : createApp(mode)));
   const [speed] = useState(initialSpeed);
   const { scale, stacked, mobile } = useStage();
+
+  // Presets saved on this machine live in this browser between visits. Best effort: storage may be blocked.
+  const presets = app.machine.presets;
+  const [restored, setRestored] = useState(false);
+  useEffect(() => {
+    try {
+      const saved = JSON.parse(window.localStorage.getItem(PRESETS_KEY) ?? "null");
+      if (Array.isArray(saved) && saved.length) dispatch({ type: "MACHINE", event: { type: "SET_PRESETS", presets: saved } });
+    } catch {
+      // Nothing saved, or storage unavailable.
+    }
+    setRestored(true);
+  }, []);
+  useEffect(() => {
+    if (!restored) return;
+    try {
+      window.localStorage.setItem(PRESETS_KEY, JSON.stringify(presets));
+    } catch {
+      // Storage unavailable: presets last until the page closes.
+    }
+  }, [presets, restored]);
 
   // The only clock: report elapsed real time; the machine decides what it means.
   useEffect(() => {

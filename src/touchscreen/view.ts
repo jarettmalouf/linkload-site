@@ -20,11 +20,18 @@ export interface Tile {
   numeric: boolean;
   /** Tapping the tile does this instead of opening the detail screen. */
   action?: "clear-net";
+  /** Waiting its turn: the hourglasses. */
+  waiting?: boolean;
 }
 
 const label = (s: LoadSettings | null | undefined) => s?.label ?? "Load";
 
 export function washerTile(m: MachineState): Tile | null {
+  const t = washerTileBase(m);
+  return t && t.status === "Waiting" ? { ...t, waiting: true } : t;
+}
+
+function washerTileBase(m: MachineState): Tile | null {
   const w = m.washer;
   if (!w) {
     // Held in the queue drawer until the net is cleared.
@@ -64,6 +71,11 @@ export function washerTile(m: MachineState): Tile | null {
 }
 
 export function dryerTile(m: MachineState): Tile | null {
+  const t = dryerTileBase(m);
+  return t && t.status === "Waiting" ? { ...t, waiting: true } : t;
+}
+
+function dryerTileBase(m: MachineState): Tile | null {
   const d = m.dryer;
   if (!d) return null;
   const type = label(d.load.settings);

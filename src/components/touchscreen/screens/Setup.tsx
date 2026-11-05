@@ -2,8 +2,8 @@
 
 import { useMemo } from "react";
 import { activeLoad, canQueueInSetup, draftPreview, pickerOptions, setupNote, timingAvailable } from "@/touchscreen/app";
-import { DRY_PRESETS, WASH_PRESETS } from "@/touchscreen/programs";
-import type { DryProgramId, ProgramId, WashProgramId } from "@/touchscreen/types";
+import { programLabel } from "@/touchscreen/programs";
+import type { ProgramId } from "@/touchscreen/types";
 import { ClockIcon, PlayIcon, RoundButton, ScrollPicker, SlidersIcon } from "../ui";
 import type { ScreenProps } from "../types";
 
@@ -23,7 +23,7 @@ export function Setup({ app, dispatch }: ScreenProps) {
   const kind = load.target.kind;
   const options = pickerOptions(app, kind).map((id) => ({
     id,
-    label: kind === "dry" ? DRY_PRESETS[id as DryProgramId].label : WASH_PRESETS[id as WashProgramId].label,
+    label: programLabel(id, kind, app.machine.presets),
   }));
   const minute = Math.floor(app.machine.now);
   // eslint-disable-next-line react-hooks/exhaustive-deps

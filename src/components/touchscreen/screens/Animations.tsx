@@ -1,5 +1,6 @@
 "use client";
 
+import { useId } from "react";
 import type { TransferKind } from "@/touchscreen/types";
 
 /**
@@ -181,5 +182,52 @@ export function MoveAnim({ kind }: { kind: TransferKind }) {
         ),
       )}
     </svg>
+  );
+}
+
+// ── Waiting: two hourglasses ────────────────────────────────────────────────
+
+const GLASS = "M-20 -37 C-20 -12, -4 -7, -4 0 C-4 7, -20 12, -20 37 L20 37 C20 12, 4 7, 4 0 C4 -7, 20 -12, 20 -37 Z";
+
+/**
+ * One hourglass. The glass flips every few seconds; the sand is drawn in
+ * screen space (not flipped with the glass), so the top bulb always drains
+ * into the bottom one and refills as the glass turns over.
+ */
+function Hourglass({ dir }: { dir: "cw" | "ccw" }) {
+  // Unique per instance: the mini screen on the machine draws these too.
+  const id = `hg${useId().replace(/:/g, "")}`;
+  return (
+    <svg width="56" height="92" viewBox="-28 -46 56 92" fill="none" aria-hidden>
+      <defs>
+        <clipPath id={id}>
+          <path d={GLASS} />
+        </clipPath>
+      </defs>
+      <g clipPath={`url(#${id})`}>
+        <rect className="ts-sand-top" x="-22" y="-30" width="44" height="28" fill="var(--ts-heat)" opacity="0.55" />
+        <rect className="ts-sand-bottom" x="-22" y="8" width="44" height="29" fill="var(--ts-heat)" opacity="0.55" />
+        <line className="ts-sand-stream" x1="0" y1="-2" x2="0" y2="34" stroke="var(--ts-heat)" strokeWidth="1.5" opacity="0.55" />
+      </g>
+      <g className={`ts-flip-${dir}`}>
+        <path d={GLASS} stroke="var(--ts-sleep)" strokeWidth="2.2" strokeLinejoin="round" />
+        <rect x="-26" y="-43" width="52" height="6" rx="2" fill="var(--ts-sleep)" />
+        <rect x="-26" y="37" width="52" height="6" rx="2" fill="var(--ts-sleep)" />
+      </g>
+    </svg>
+  );
+}
+
+/** Waiting: an hourglass on each side, flipping together in opposite directions. */
+export function TileWait() {
+  return (
+    <>
+      <span className="pointer-events-none absolute left-10 top-1/2 -translate-y-1/2 opacity-70">
+        <Hourglass dir="cw" />
+      </span>
+      <span className="pointer-events-none absolute right-10 top-1/2 -translate-y-1/2 opacity-70">
+        <Hourglass dir="ccw" />
+      </span>
+    </>
   );
 }

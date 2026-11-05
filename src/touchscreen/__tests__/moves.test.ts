@@ -117,3 +117,21 @@ describe("Hang-dry window in the simulator", () => {
     expect(effectiveSpeed({ ...s, machine: { ...s.machine, hangDry: { secondsLeft: 30, unlocked: false } } }, 1)).toBe(1);
   });
 });
+
+describe("The dry load drops to the done drawer only when a wash needs the dryer", () => {
+  it("a finished dry load waits in the dryer until the drop just meets the wash's end", () => {
+    // A dry-only load finishes first; a 45-minute wash starts after it.
+    let s = reduce(machine(pm(0), true), { type: "SET_START_MODE", bits: "110" });
+    s = reduce(s, { type: "START_RUN", input: { loads: [at("dryer", { ...times(0, 15), program: "warm-towels" }, "dry-only")], doneBy: null, eco: false } });
+    s = tick(s, { simMin: 20 });
+    expect(s.dryer?.status).toBe("finished");
+    s = reduce(s, { type: "START_RUN", input: { loads: [at("washer", times(45, 55))], doneBy: null, eco: false } });
+    const washStart = s.now;
+    const { seen } = moves(s, 60);
+    // Drop takes 1 minute: it starts 44 minutes in, so the wet load moves at 45 with no wait.
+    expect(seen.map((m) => [m.kind, m.at - washStart])).toEqual([
+      ["to-drawer", 44],
+      ["to-dryer", 45],
+    ]);
+  });
+});

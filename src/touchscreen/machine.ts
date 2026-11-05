@@ -67,6 +67,7 @@ export function createMachine(opts: { now?: number; config?: Partial<MachineConf
     hangDry: null,
     failure: null,
     finished: [],
+    presets: [],
     notifications: [],
     ui: { awake: true, idleSec: 0, configuring: null },
     nextId: 1,
@@ -800,6 +801,34 @@ export function reduce(state: MachineState, event: MachineEvent): MachineState {
       s.ui.configuring = null;
       break;
 
+    case "SAVE_PRESET": {
+      const name = event.name.trim();
+      if (!name) break;
+      const existing = s.presets.find((p) => p.name.toLowerCase() === name.toLowerCase());
+      const id = existing?.id ?? (`custom-${s.nextId++}` as const);
+      // A preset is fixed settings: no Auto scan, and the hang-dry net is chosen per load.
+      const settings: LoadSettings = {
+        ...event.settings,
+        program: id,
+        label: name,
+        auto: false,
+        dryMarginMin: 0,
+        wash: { ...event.settings.wash, hangDryNet: false },
+        dry: { ...event.settings.dry },
+      };
+      if (existing) Object.assign(existing, { name, settings });
+      else s.presets.push({ id, name, settings });
+      break;
+    }
+    case "DELETE_PRESET":
+      s.presets = s.presets.filter((p) => p.id !== event.id);
+      break;
+    case "SET_PRESETS":
+      s.presets = structuredClone(event.presets);
+      // Keep new ids clear of restored ones.
+      for (const p of s.presets) s.nextId = Math.max(s.nextId, Number(p.id.slice("custom-".length)) + 1);
+      break;
+
     case "LOAD_PLACE": {
       const load = newLoad(s);
       if (placeToggle(s, event.place) !== "load") break;
@@ -824,6 +853,7 @@ export function reduce(state: MachineState, event: MachineEvent): MachineState {
       const fresh = createMachine({ now: s.now, config: s.config });
       fresh.sim = { ...s.sim, failNextTransfer: false };
       fresh.nextId = s.nextId;
+      fresh.presets = s.presets;
       const [d, w, q] = event.bits.split("").map((b) => b === "1");
       if (d) fresh.dryer = { load: newLoad(fresh), status: "raw", remaining: 0, margin: 0 };
       if (w) fresh.washer = { load: newLoad(fresh), status: "raw", remaining: 0 };
@@ -922,18 +952,38 @@ export function placeToggle(s: MachineState, place: PlaceId): "load" | "empty" |
 }
 
 export interface Clearance {
-  /** What to empty, in the order to ask for it. */
+  /** What to empty, in the order to ask for it. Only when the next load is held right now. */
   places: ("dryer" | "drawer")[];
-  /** Loads still short of a drawer slot after that (the unattended limit, rule 8). */
+  /** Drawer slots still short later on, though nothing is held yet (the unattended limit, rule 8). */
   residual: number;
 }
 
 /**
- * What has to be emptied so every wash load in (or about to join) the run can
- * reach the dryer. Each wash load that isn't the last one pushes the dryer's
- * load into the done drawer, so the drawer needs a free slot per push.
- * Emptying a dryer holding a finished load removes a push; emptying the
- * drawer adds a slot. A dryer that is still drying can't be emptied.
+ * The next wash load is ready to go but held: the dryer is (or will be)
+ * occupied and the done drawer is full, so its wet clothes would have nowhere
+ * to go (rules 1 and 2).
+ */
+export function nextLoadHeld(s: MachineState): boolean {
+  const w = s.washer;
+  // A queued load counts once nothing is moving (before Start, or with the washer empty and idle).
+  const next = w ? w.status === "waiting" && w.load.plan === "wash-dry" : s.queue?.plan === "wash-dry" && !s.transfer;
+  if (!next) return false;
+  const dryer = !!s.dryer || s.transfer?.kind === "to-dryer";
+  const drawer = !!s.drawer || s.transfer?.kind === "to-drawer";
+  return !canStartWash(dryer ? "occupied" : "empty", drawer ? "full" : "empty");
+}
+
+/**
+ * What has to be emptied, and only once a load is actually held: while a
+ * wash can still start, the machine moves the dry load down to the done
+ * drawer on its own, so there's nothing to ask yet (that shortfall is
+ * `residual`). When a load is held, ask for everything the remaining loads
+ * need in one go.
+ *
+ * Each wash load that isn't the last pushes the dryer's load into the done
+ * drawer, which needs a free slot per push. The done drawer comes first:
+ * the machine put its load there to be collected. The dryer comes first
+ * only when the drawer holds clothes put there by hand.
  */
 export function clearance(s: MachineState): Clearance {
   const t = s.transfer;
@@ -944,14 +994,17 @@ export function clearance(s: MachineState): Clearance {
   if (pending === 0) return { places: [], residual: 0 };
   const exits = drawerExitsNeeded(!!s.dryer || t?.kind === "to-dryer", pending);
   let deficit = exits - (s.drawer || t?.kind === "to-drawer" ? 0 : 1);
+  if (deficit <= 0) return { places: [], residual: 0 };
+  if (!nextLoadHeld(s)) return { places: [], residual: deficit };
+
+  const canEmpty = { drawer: !!s.drawer, dryer: !!s.dryer && placeToggle(s, "dryer") === "empty" };
+  const order: Clearance["places"] = s.drawer?.settings ? ["drawer", "dryer"] : ["dryer", "drawer"];
   const places: Clearance["places"] = [];
-  if (deficit > 0 && s.dryer && placeToggle(s, "dryer") === "empty") {
-    places.push("dryer");
-    deficit--;
-  }
-  if (deficit > 0 && s.drawer) {
-    places.push("drawer");
-    deficit--;
+  for (const p of order) {
+    if (deficit > 0 && canEmpty[p]) {
+      places.push(p);
+      deficit--;
+    }
   }
   return { places, residual: Math.max(0, deficit) };
 }

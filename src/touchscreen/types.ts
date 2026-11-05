@@ -10,7 +10,16 @@ export type WaterTemp = "cold" | "warm" | "hot";
 
 export type WashProgramId = "delicates" | "bedding" | "auto" | "normal" | "heavy-duty";
 export type DryProgramId = "auto" | "warm-towels" | "normal" | "delicates";
-export type ProgramId = WashProgramId | DryProgramId;
+/** A preset someone saved on this machine, e.g. "Baby clothes". */
+export type CustomProgramId = `custom-${number}`;
+export type ProgramId = WashProgramId | DryProgramId | CustomProgramId;
+
+export interface CustomPreset {
+  id: CustomProgramId;
+  name: string;
+  /** Wash and dry together, like the built-in presets. */
+  settings: LoadSettings;
+}
 
 export interface WashSettings {
   minutes: number;
@@ -225,6 +234,8 @@ export interface MachineState {
   failure: TransferFailure | null;
   /** Finish screens waiting to be shown, oldest first. */
   finished: FinishedLoad[];
+  /** Presets saved on this machine, in the order they were made. */
+  presets: CustomPreset[];
   notifications: Notification[];
 
   ui: UiState;
@@ -265,6 +276,9 @@ export type MachineEvent =
   | { type: "TOUCH" }
   | { type: "CONFIGURE"; place: "queue" | "washer" | "dryer"; kind: "wash" | "dry" }
   | { type: "CONFIGURE_END" }
+  /** Save the settings under a name; the same name (any case) updates that preset. */
+  | { type: "SAVE_PRESET"; name: string; settings: LoadSettings }
+  | { type: "DELETE_PRESET"; id: CustomProgramId }
   // Physical world
   | { type: "APPROACH" }
   | { type: "LOAD_PLACE"; place: PlaceId }
@@ -276,7 +290,9 @@ export type MachineEvent =
   | { type: "DRY_OVERRUN"; minutes: number }
   | { type: "SET_SCAN_OUTCOME"; outcome: ScanOutcome }
   | { type: "SET_VIDEO"; enabled: boolean }
-  | { type: "SET_TIME"; now: number };
+  | { type: "SET_TIME"; now: number }
+  /** Restore presets saved by the simulator (e.g. from the browser). */
+  | { type: "SET_PRESETS"; presets: CustomPreset[] };
 
 /** Notebook three-bit mode, written dryer-washer-queue, e.g. "101". */
 export type NotebookBits = "000" | "001" | "010" | "011" | "100" | "101" | "110" | "111";

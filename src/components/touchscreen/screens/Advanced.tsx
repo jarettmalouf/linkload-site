@@ -1,7 +1,7 @@
 "use client";
 
 import { activeLoad } from "@/touchscreen/app";
-import { presetOf } from "@/touchscreen/programs";
+import { isCustom, presetOf } from "@/touchscreen/programs";
 import type { LoadSettings } from "@/touchscreen/types";
 import { Pill, SliderRow, Toggle, settingsGrid } from "../ui";
 import { TEMPS, TEMP_LABEL, cups, type ScreenProps } from "../types";
@@ -11,9 +11,12 @@ export function Advanced({ app, dispatch }: ScreenProps) {
   const d = app.draft!;
   const load = activeLoad(d);
   const s = load.settings;
-  const def = presetOf(load.program, load.target.kind);
+  const def = presetOf(load.program, load.target.kind, app.machine.presets);
   const showWash = load.target.kind === "wash";
   const showDry = d.intent !== "wash-only";
+  // A queued load waits behind another one, so it can't use the hang-dry net.
+  // (A queue-drawer load with the washer empty goes first, so it still can.)
+  const showNet = !(load.target.place === "queue" && (d.loads.length > 1 || d.intent === "queue-another"));
   const edit = (patch: (n: LoadSettings) => void) => {
     const next: LoadSettings = { ...s, wash: { ...s.wash }, dry: { ...s.dry } };
     patch(next);
@@ -42,10 +45,12 @@ export function Advanced({ app, dispatch }: ScreenProps) {
               value={s.wash.bleachCups} defaultValue={def.wash.bleachCups} display={cups(s.wash.bleachCups)}
               onChange={(v) => edit((n) => { n.wash.bleachCups = v; })} />
           </div>
-          <div className="flex h-14 items-center justify-between text-[25px]">
-            <div>Hang-dry net in use</div>
-            <Toggle label="Hang-dry net in use" on={s.wash.hangDryNet} onChange={(on) => edit((n) => { n.wash.hangDryNet = on; })} />
-          </div>
+          {showNet && (
+            <div className="flex h-14 items-center justify-between text-[25px]">
+              <div>Hang-dry net in use</div>
+              <Toggle label="Hang-dry net in use" on={s.wash.hangDryNet} onChange={(on) => edit((n) => { n.wash.hangDryNet = on; })} />
+            </div>
+          )}
         </div>
       )}
 
@@ -65,7 +70,12 @@ export function Advanced({ app, dispatch }: ScreenProps) {
         </div>
       )}
 
-      <Pill height={88} className="text-[30px]" onClick={() => dispatch({ type: "BACK" })}>OK</Pill>
+      <div className="flex gap-5">
+        <Pill variant="ghost" height={88} className="flex-1 border-2 border-solid border-[var(--ts-line)] text-[28px]" onClick={() => dispatch({ type: "OPEN_NAME_PRESET" })}>
+          {isCustom(load.program) ? "Edit preset" : "Save as preset"}
+        </Pill>
+        <Pill height={88} className="flex-1 text-[30px]" onClick={() => dispatch({ type: "BACK" })}>OK</Pill>
+      </div>
     </div>
   );
 }

@@ -2,7 +2,7 @@
 
 import { canQueueAnother, dryerTile, queuedText, washerTile, type Tile } from "@/touchscreen/view";
 import type { ScreenProps } from "../types";
-import { TileDry, TileWash } from "./Animations";
+import { TileDry, TileWait, TileWash } from "./Animations";
 
 function TileButton({ tile, onClick }: { tile: Tile; onClick: () => void }) {
   return (
@@ -16,6 +16,7 @@ function TileButton({ tile, onClick }: { tile: Tile; onClick: () => void }) {
     >
       {/* Clothes, bubbles and heat drift around the whole tile, behind the numbers. */}
       {tile.active && (tile.place === "washer" ? <TileWash /> : <TileDry />)}
+      {tile.waiting && <TileWait />}
       <span className="relative text-[26px] text-[var(--ts-muted)]">{tile.status}</span>
       {tile.action === "clear-net" ? (
         // In the simulator this stands in for taking the clothes out of the net.
