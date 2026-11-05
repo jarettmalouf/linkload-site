@@ -23,7 +23,7 @@ export function NamePreset({ app, dispatch }: ScreenProps) {
   return (
     <div className="box-border flex h-full flex-col justify-between px-7 pb-8 pt-10">
       <div className="flex flex-col gap-6 px-4">
-        <div className="text-[26px] text-[var(--ts-muted)]">{editing ? "Edit preset" : "Name this preset"}</div>
+        <div className="flex min-h-12 items-center pl-[64px] text-[26px] text-[var(--ts-muted)]">{editing ? "Edit preset" : "Name this preset"}</div>
         <div className="flex h-[96px] items-center border-0 border-b-2 border-solid border-[var(--ts-accent)] text-[60px] font-medium tracking-[-1.2px]" aria-live="polite">
           <span className={name ? "" : "text-[var(--ts-dim)]"}>{name || "Baby clothes"}</span>
           <span className="ml-1 h-[60px] w-[3px] animate-pulse bg-[var(--ts-accent)]" aria-hidden />

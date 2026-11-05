@@ -1,6 +1,6 @@
 "use client";
 
-import { showWelcome, userBrowsing } from "@/touchscreen/app";
+import { canGoBack, showWelcome, userBrowsing } from "@/touchscreen/app";
 import { baseScreen, overlayScreen } from "@/touchscreen/screens";
 import { Advanced } from "./screens/Advanced";
 import { DryDetail, WashDetail } from "./screens/Detail";
@@ -11,6 +11,7 @@ import { ClearanceModal, Failed, Finish, HangDry, ProTip, Sleep, Transfer } from
 import { NamePreset } from "./screens/NamePreset";
 import { Setup } from "./screens/Setup";
 import type { ScreenProps } from "./types";
+import { BackButton } from "./ui";
 
 export const CANVAS = { width: 786, height: 852 };
 
@@ -53,6 +54,10 @@ export function TouchScreen(props: ScreenProps) {
         onPointerDownCapture={() => props.dispatch({ type: "MACHINE", event: { type: "TOUCH" } })}
       >
         <Current {...props} />
+        {/* Over the flow screens only: machine prompts take the whole screen. Hidden while an info sheet is open. */}
+        {canGoBack(props.app) && !props.app.info && overlayScreen(props.app.machine, true) == null && (
+          <BackButton onClick={() => props.dispatch({ type: "BACK" })} />
+        )}
         {!userBrowsing(props.app) && overlayScreen(props.app.machine) == null && <ClearanceModal {...props} />}
       </div>
     </div>

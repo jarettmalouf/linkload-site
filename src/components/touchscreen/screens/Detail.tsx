@@ -8,8 +8,8 @@ import { TEMP_LABEL, cups, type ScreenProps } from "../types";
 function Frame({ title, sub, children, actions }: { title: string; sub: string; children: React.ReactNode; actions: React.ReactNode }) {
   return (
     <div className="box-border flex h-full flex-col justify-between px-11 pb-8 pt-10">
-      <div className="flex flex-col gap-2">
-        <div className="text-[44px] font-medium tracking-[-1px]">{title}</div>
+      <div className="flex flex-col gap-2 pl-[76px]">
+        <div className="flex min-h-16 items-center text-[44px] font-medium tracking-[-1px]">{title}</div>
         <div className="text-[24px] text-[var(--ts-muted)]">{sub}</div>
       </div>
       {children}

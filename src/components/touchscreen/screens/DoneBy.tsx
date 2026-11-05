@@ -100,7 +100,7 @@ export function DoneBy({ app, dispatch }: ScreenProps) {
   const status = timingStatus(app, preview);
 
   return (
-    <div className="relative box-border flex h-full flex-col justify-between p-11">
+    <div className="relative box-border flex h-full flex-col justify-between px-11 pb-11 pt-[112px]">
       <div className="flex flex-col gap-6">
         {(["done-by", "eco"] as const).map((topic) => (
           <div key={topic} className="flex h-[72px] items-center justify-between">

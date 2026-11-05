@@ -261,6 +261,22 @@ export function ScrollPicker<T extends string>({
 
 // ── Icons (from the mockups) ────────────────────────────────────────────────
 
+/** Top-left back: same as each screen's own Back, Cancel or OK. */
+export function BackButton({ onClick }: { onClick: () => void }) {
+  return (
+    <button
+      type="button"
+      aria-label="Back"
+      onClick={onClick}
+      className="absolute left-7 top-7 z-10 flex h-16 w-16 items-center justify-center rounded-full border-0 bg-[var(--ts-surface)] text-[var(--ts-text)]"
+    >
+      <svg width="28" height="28" viewBox="0 0 28 28" fill="none" aria-hidden>
+        <path d="M17 5L8 14l9 9" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" />
+      </svg>
+    </button>
+  );
+}
+
 export const ClockIcon = () => (
   <svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
     <circle cx="12" cy="12" r="9" />

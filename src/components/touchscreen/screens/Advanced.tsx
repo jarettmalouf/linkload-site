@@ -25,7 +25,7 @@ export function Advanced({ app, dispatch }: ScreenProps) {
 
   return (
     <div className="box-border flex h-full flex-col justify-between px-11 pb-8 pt-10">
-      <div className="text-[44px] font-medium tracking-[-1px]">{s.label}</div>
+      <div className="flex min-h-16 items-center pl-[76px] text-[44px] font-medium tracking-[-1px]">{s.label}</div>
 
       {showWash && (
         <div className="flex flex-col gap-3">

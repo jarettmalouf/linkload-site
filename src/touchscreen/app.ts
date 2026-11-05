@@ -206,6 +206,16 @@ export function timingStatus(s: AppState, preview: RunPreview | null): string {
 
 export const userBrowsing = (s: AppState) => s.nav.length > 0;
 
+/**
+ * The top-left back button shows on every flow screen, except Dry Only when
+ * the machine opened it for a raw dryer load: going back would only reopen it.
+ */
+export function canGoBack(s: AppState): boolean {
+  if (!s.nav.length) return false;
+  const forcedDryOnly = s.nav.length === 1 && s.draft?.intent === "dry-only" && baseScreen(s.machine) === "dry-only";
+  return !forcedDryOnly;
+}
+
 function configure(s: AppState, machine: MachineState, d: Draft): MachineState {
   const t = activeLoad(d).target;
   return reduce(machine, { type: "CONFIGURE", place: t.place, kind: t.kind });

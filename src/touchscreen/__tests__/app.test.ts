@@ -421,3 +421,28 @@ describe("Presets", () => {
     expect(s.machine.presets.map((p) => p.name)).toEqual(["Towels"]);
   });
 });
+
+describe("Back button", () => {
+  it("Wash Only by mistake: back returns home, where Wash and dry can be picked", async () => {
+    const { canGoBack } = await import("../app");
+    let s = step(greeted("010"), { type: "OPEN_SETUP", intent: "wash-only" });
+    expect(canGoBack(s)).toBe(true);
+    s = step(s, { type: "BACK" });
+    expect(s.nav).toEqual([]);
+    expect(s.draft).toBeNull();
+    expect(leds(s.machine).washer).toBe(false);
+    s = step(s, { type: "OPEN_SETUP", intent: "full-run" });
+    expect(s.draft?.intent).toBe("full-run");
+  });
+
+  it("steps back one screen at a time, and isn't offered on the Dry Only the machine opened itself", async () => {
+    const { canGoBack } = await import("../app");
+    let s = step(greeted("010"), { type: "OPEN_SETUP", intent: "full-run" });
+    s = step(s, { type: "OPEN", screen: "advanced" });
+    s = step(s, { type: "OPEN_NAME_PRESET" });
+    s = step(s, { type: "BACK" });
+    expect(s.nav).toEqual(["setup", "advanced"]);
+    expect(canGoBack(greeted("100"))).toBe(false);
+    expect(canGoBack(greeted("000"))).toBe(false);
+  });
+});
